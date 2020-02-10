@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mythreads/services/weatherData.dart';
+import 'package:mythreads/ui/uiAddProduct.dart';
 import 'package:weather/weather.dart';
 
 class MyApp extends StatelessWidget {
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
-        
+
         primarySwatch: Colors.blue,
       ),
       home: MyHomePage(title: 'MyThreads'),
@@ -40,20 +40,26 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String weatherToday = "weather";
+  String weatherIcon = '01d'; //todo retreive icon
+  WeatherStation weatherStation =
+      new WeatherStation("996cc4f3b136aea607960591dd64e7a5");
 
-  
-//   Future<String>loadWeather() async {
-// WeatherStation weatherStation = new WeatherStation("996cc4f3b136aea607960591dd64e7a5");
-// Weather weather = (await weatherStation.currentWeather());
-// weatherToday= '${weather.weatherMain} ${weather.tempMin.celsius.round()}°C/${weather.tempMax.celsius.round()}°C';
-// return weatherToday;
-// }
-loadWeatherState(){
-loadWeatherToday(weatherToday);
-print("WeatherState: "+ weatherToday);
-setState(() {});//weatherToday;
-}
-int chipPref = 0;//use to 'search' in tabs
+  Future<String> loadWeatherToday() async {
+    Weather weather = (await weatherStation.currentWeather());
+    weatherToday =
+        '${weather.weatherMain} ${weather.tempMin.celsius.round()}°C/${weather.tempMax.celsius.round()}°C';
+    weatherIcon = weather.weatherIcon;
+    return weatherToday;
+  }
+
+  loadWeatherState() {
+    loadWeatherToday();
+    print(weatherIcon.toString() + " WeatherState: " + weatherToday); //check
+    setState(() {
+    });
+  }
+
+  int chipPref = 0; //use to 'search' in tabs
   // int _counter = 0;
 
   // void _incrementCounter() {
@@ -70,7 +76,7 @@ int chipPref = 0;//use to 'search' in tabs
   @override
   Widget build(BuildContext context) {
     loadWeatherState();
-    
+
     //print(loadWeather());
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -80,107 +86,108 @@ int chipPref = 0;//use to 'search' in tabs
     // than having to individually change instances of widgets.
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add),
-          mini: true,
-          onPressed: () {
-            Fluttertoast.showToast(
-                msg: 'button pressed',
-                toastLength: Toast.LENGTH_LONG,
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        mini: true,
+        onPressed: () {
+          Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddProductPage()),
               );
-          },
-        ),
+        },
+      ),
       bottomNavigationBar: BottomAppBar(
-          shape: CircularNotchedRectangle(),
-          notchMargin: 2.0,
-          child: new Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              IconButton(
-                  icon: Icon(Icons.favorite),
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => ToDo()),
-                    // );
-                    Fluttertoast.showToast(
-                msg: 'button pressed',
-                toastLength: Toast.LENGTH_LONG,
-              );
-                  }),
-              IconButton(
-                icon: Icon(Icons.shopping_basket),
+        shape: CircularNotchedRectangle(),
+        notchMargin: 2.0,
+        child: new Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            IconButton(
+                icon: Icon(Icons.accessibility_new),
                 onPressed: () {
-                  // Navigator.of(context).push(MaterialPageRoute(
-                  //     builder: (BuildContext context) => MyWebView(
-                  //           title: "Macarbi Website",
-                  //           selectedUrl: "https://www.macarbi.com",
-                  //         )));
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => ToDo()),
+                  // );
                   Fluttertoast.showToast(
-                msg: 'button pressed',
-                toastLength: Toast.LENGTH_LONG,
-              );
-                },
-              ),
-            ],
-          ),
-        ),
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        //title: Text(weatherToday),//Text(widget.title),
-        title: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-              //     Image.asset(
-              //    'assets/logo.png',
-              //     fit: BoxFit.contain,
-              //     height: 32,
-              // ),
-              Icon(Icons.ac_unit),
-              Container(
-                  padding: const EdgeInsets.all(8.0), child: Text(weatherToday))
-            ],
-
-          ),
-        leading:PopupMenuButton<String>(
-     itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-    const PopupMenuItem<String>(
-      child: Text('Stuff!'),
-    ),
-    const PopupMenuItem<String>(
-      child: Text('Other Stuff!'),
-    ),
-    const PopupMenuItem<String>(
-      child: Text('Backup'),
-    ),
-    const PopupMenuItem<String>(
-      child: Text('Settings'),
-    ),
-  ],
-),
-actions: <Widget>[
-  IconButton(
-              icon: Icon(Icons.search),
+                    msg: 'button pressed',
+                    toastLength: Toast.LENGTH_LONG,
+                  );
+                }),
+            IconButton(
+              icon: Icon(Icons.shopping_basket),
               onPressed: () {
+                // Navigator.of(context).push(MaterialPageRoute(
+                //     builder: (BuildContext context) => MyWebView(
+                //           title: "Macarbi Website",
+                //           selectedUrl: "https://www.macarbi.com",
+                //         )));
                 Fluttertoast.showToast(
-                msg: 'button pressed',
-                toastLength: Toast.LENGTH_LONG,
-              );
-                },
+                  msg: 'button pressed',
+                  toastLength: Toast.LENGTH_LONG,
+                );
+              },
             ),
-  IconButton(
-              icon: Icon(Icons.account_circle),
-              onPressed: () {
-                Fluttertoast.showToast(
-                msg: 'button pressed',
-                toastLength: Toast.LENGTH_LONG,
-              );
-                },
+          ],
+        ),
+      ),
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.network(
+              'http://openweathermap.org/img/wn/$weatherIcon@2x.png',
+              fit: BoxFit.contain,
+              height: 32,
             ),
             
-],
+InkWell(                        
+        child:
+            Container(
+                padding: const EdgeInsets.all(8.0), child: Text(weatherToday)),
+                onTap: () {                          
+        loadWeatherState();
+        },
+),
+          ],
+        ),
+        leading: PopupMenuButton<String>(
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+            const PopupMenuItem<String>(
+              child: Text('Stuff!'),
+            ),
+            const PopupMenuItem<String>(
+              child: Text('Other Stuff!'),
+            ),
+            const PopupMenuItem<String>(
+              child: Text('Backup'),
+            ),
+            const PopupMenuItem<String>(
+              child: Text('Settings'),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              Fluttertoast.showToast(
+                msg: 'button pressed',
+                toastLength: Toast.LENGTH_LONG,
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: () {
+              Fluttertoast.showToast(
+                msg: 'button pressed',
+                toastLength: Toast.LENGTH_LONG,
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -188,39 +195,82 @@ actions: <Widget>[
         child: Column(
           children: <Widget>[
             Row(//favs carasole
-            ),
+                ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,//chips pref
-children: [ChoiceChip(label: Text('all'), selected: chipPref==0, onSelected: (value){setState(() {
-  chipPref = 0;
-});},),
-ChoiceChip(label: Text('cold'), selected: chipPref==1, onSelected: (value){setState(() {
-  chipPref = 1;
-});},),
-ChoiceChip(label: Text('chilly'), selected: chipPref==2, onSelected: (value){setState(() {
-  chipPref = 2;
-});},),
-ChoiceChip(label: Text('mild'), selected: chipPref==3, onSelected: (value){setState(() {
-  chipPref = 3;
-});},),
-ChoiceChip(label: Text('warm'), selected: chipPref==4, onSelected: (value){setState(() {
-  chipPref = 4;
-});},),
-ChoiceChip(label: Text('hot'), selected: chipPref==5, onSelected: (value){setState(() {
-  chipPref = 5;
-});},),
-          ChoiceChip(label: Text('swim'), selected: chipPref==6, onSelected: (value){setState(() {
-  chipPref = 6;
-});},)],
+              mainAxisSize: MainAxisSize.max, //chips pref
+              children: [
+                ChoiceChip(
+                  label: Text('all'),
+                  selected: chipPref == 0,
+                  onSelected: (value) {
+                    setState(() {
+                      chipPref = 0;
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  label: Text('cold'),
+                  selected: chipPref == 1,
+                  onSelected: (value) {
+                    setState(() {
+                      chipPref = 1;
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  label: Text('chilly'),
+                  selected: chipPref == 2,
+                  onSelected: (value) {
+                    setState(() {
+                      chipPref = 2;
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  label: Text('mild'),
+                  selected: chipPref == 3,
+                  onSelected: (value) {
+                    setState(() {
+                      chipPref = 3;
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  label: Text('warm'),
+                  selected: chipPref == 4,
+                  onSelected: (value) {
+                    setState(() {
+                      chipPref = 4;
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  label: Text('hot'),
+                  selected: chipPref == 5,
+                  onSelected: (value) {
+                    setState(() {
+                      chipPref = 5;
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  label: Text('swim'),
+                  selected: chipPref == 6,
+                  onSelected: (value) {
+                    setState(() {
+                      chipPref = 6;
+                    });
+                  },
+                )
+              ],
             ),
             Row(//tabs and list
 
-            )
+                )
           ],
         ),
       ),
-      
     );
   }
 }
