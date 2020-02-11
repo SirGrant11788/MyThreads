@@ -40,7 +40,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String weatherToday = "weather";
-  String weatherIcon = '01d'; //todo retreive icon
+  String weatherIcon = '01d';
   WeatherStation weatherStation =
       new WeatherStation("996cc4f3b136aea607960591dd64e7a5");
 
@@ -87,13 +87,13 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.accessibility_new),
         mini: true,
         onPressed: () {
-          Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddProductPage()),
-              );
+          Fluttertoast.showToast(
+                    msg: 'button pressed',
+                    toastLength: Toast.LENGTH_LONG,
+                  );
         },
       ),
       bottomNavigationBar: BottomAppBar(
@@ -104,16 +104,16 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             IconButton(
-                icon: Icon(Icons.accessibility_new),
+                icon: Icon(Icons.add),
                 onPressed: () {
                   // Navigator.push(
                   //   context,
                   //   MaterialPageRoute(builder: (context) => ToDo()),
                   // );
-                  Fluttertoast.showToast(
-                    msg: 'button pressed',
-                    toastLength: Toast.LENGTH_LONG,
-                  );
+                  Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddProductPage()),
+              );
                 }),
             IconButton(
               icon: Icon(Icons.shopping_basket),
@@ -255,7 +255,7 @@ InkWell(
                   },
                 ),
                 ChoiceChip(
-                  label: Text('swim'),
+                  label: Text('other'),
                   selected: chipPref == 6,
                   onSelected: (value) {
                     setState(() {
