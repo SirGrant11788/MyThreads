@@ -41,9 +41,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final db = DatabaseHelper.instance;
-  var dbMap;//testing
-  List <String> dbList = List<String>();//testing
-  List <Tab> catTabList = List <Tab>();
+  var dbMap; //testing
+  List<String> dbList = List<String>(); //testing
+  List<Tab> catTabList = List<Tab>();
+  List<Widget> contTabList = List<Widget>();
   String weatherToday = "weather";
   String weatherIcon = '01d';
   WeatherStation weatherStation =
@@ -81,36 +82,49 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     loadWeatherState();
     _query();
-    List <Tab> tabs;
-    final _kTabs = <Tab>[
-      Tab(text: 'NK'),
-      Tab(text: 'ActiveTools'),
-      Tab(text: 'Coxmate'),
-      Tab(text: 'Concept 2'),
-      Tab(text: 'Croker'),
-      Tab(text: 'Hudson'),
-      Tab(text: 'Swift'),
-      Tab(text: 'Rowshop'),
-    ];
-    final _kTabPages = <Tab>[
-      Tab(text: 'NK'),
-       Tab(text: 'ActiveTools'),
-       //Tab(text: 'Coxmate'),
+    contTabList.clear();
+    for(int i=0;i < catTabList.length;i++){
+      //print("loop check $i");
+      contTabList.add(Center(
+  child: Text('HELLLO THERE! ${i} and '),
+));
+    }
+//     contTabList.add(Center(
+//   child: Text('HELLLO THERE!  '),
+// ));
+// contTabList.add(Center(
+//   child: Text('HELLLO THERE! and '),
+// ));
+final _kTabPages = <Tab>[
+      Tab(text: 'Welcome to MyThreads'),
+      //Tab(text: 'ActiveTools'),
+      // Tab(text: 'Coxmate'),
       // Tab(text: 'Concept 2'),
       // Tab(text: 'Croker'),
       // Tab(text: 'Hudson'),
       // Tab(text: 'Swift'),
       // Tab(text: 'Rowshop'),
     ];
-    //print(loadWeather());
+    final _kTabs = <Tab>[
+      Tab(text: 'WELCOME'),
+      //Tab(text: 'ActiveTools'),
+      // Tab(text: 'Coxmate'),
+      // Tab(text: 'Concept 2'),
+      // Tab(text: 'Croker'),
+      // Tab(text: 'Hudson'),
+      // Tab(text: 'Swift'),
+      // Tab(text: 'Rowshop'),
+    ];
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    
     return DefaultTabController(
-      length: catTabList.toSet().toList().length,
+      length: catTabList.length ==0 ? _kTabs.length: catTabList.length,//catTabList.length,
       child: Scaffold(
         appBar: AppBar(
           title: Row(
@@ -169,11 +183,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
           bottom: TabBar(
             isScrollable: true,
-            tabs:catTabList.toSet().toList(),
+            tabs: catTabList.length ==0 ?_kTabs:catTabList,//catTabList,
           ),
         ),
         body: TabBarView(
-          children: _kTabPages,
+          children: catTabList.length ==0 ? _kTabPages:contTabList,//contTabList,//_kTabPages,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
@@ -226,35 +240,36 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-   _query() async {
+  _query() async {
     final allRows = await db.queryAllRows();
-    print('query all rows:');
-     //allRows.forEach((row) => print(row));
-     //dbList.clear();
-     //dbMap.clear();
+    //print('query all rows:');
+    //allRows.forEach((row) => print(row));
+    //dbList.clear();
+    //dbMap.clear();
     //  allRows.forEach((row) => dbMap.putIfAbsent(row['_id'].toString(), row['name']));
     //  print('dbMap: $dbMap');
-     //print('dblist: ${dbList.toSet().toList()}');
-     //return dbList.toSet().toList();
-     //print('LIST: ${dbHome.length}');
+    //print('dblist: ${dbList.toSet().toList()}');
+    //return dbList.toSet().toList();
+    //print('LIST: ${dbHome.length}');
     //  setState(() {
     //    dbList.toSet().toList();
     //  });
     //Tab(text: 'NK')
+    
     catTabList.clear();
     //allRows.forEach((row) => catTabList.add(Tab(text: '${row['cat']}')));
-    allRows.forEach((row){
-      if(!catTabList.toString().contains('${row['cat']}')){
+    allRows.forEach((row) {
+      if (!catTabList.toString().contains('${row['cat']}')) {
         //print('TEST: ${allRows[1]["cat"]}');
         catTabList.add(Tab(text: '${row['cat']}'));
         //print('if');
       }
     });
-    dbMap=allRows;
+    dbMap = allRows;
     //catTabList = catTabList.toSet().toList();
     //allRows.forEach((row) => catTabList.add(row['cat']));
     //LENGTH: 3 TAB: [Tab(text: "Suit"), Tab(text: "Suit"), Tab(text: "Shorts")]
-    print('LENGTH: ${catTabList.length} TAB: ${catTabList} dbMap: ${dbMap[0]['name']}');
+    print('LENGTH: ${catTabList.length} TAB: ${catTabList}');
     //return catTabList;
   }
 }
