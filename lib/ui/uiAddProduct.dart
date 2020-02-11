@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mythreads/services/db.dart';
+import 'package:mythreads/ui/uiAppHome.dart';
+
 
 class AddProductPage extends StatefulWidget {
   @override
@@ -11,6 +14,9 @@ class AddProductPage extends StatefulWidget {
 }
 
 class _AddProductPageState extends State<AddProductPage> {
+
+  final db = DatabaseHelper.instance;
+
   TextEditingController _textFieldControllerName = TextEditingController();
   TextEditingController _textFieldControllerSize = TextEditingController();
   TextEditingController _textFieldControllerDesc = TextEditingController();
@@ -295,10 +301,14 @@ class _AddProductPageState extends State<AddProductPage> {
                   ),
                   onPressed: () {
                     Fluttertoast.showToast(
-                      msg: 'SAVE PRESSED',
+                      msg: 'Item Added',
                       toastLength: Toast.LENGTH_LONG,
                     );
-                    //addProduct('$_btnSelectedVal','${_textFieldControllerName.text}','${_textFieldControllerPrice.text}','${_textFieldControllerStock.text}','${_textFieldControllerWeight.text}' );
+                    _insert(_textFieldControllerName.text,_btnSelectedVal,_textFieldControllerSize.text,_fit,_weather,_rating,_textFieldControllerDesc.text,_cameraImage.uri);
+                  Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyApp()),
+              );
                   },
                 ),
               ],
@@ -308,4 +318,21 @@ class _AddProductPageState extends State<AddProductPage> {
       ),
     );
   }
+  void _insert(_textFieldControllerName,_btnSelectedVal,_textFieldControllerSize,_fit,_weather,_rating,_textFieldControllerDesc,_cameraImage) async {
+    // row to insert
+    Map<String, dynamic> row = {
+      DatabaseHelper.columnName : '$_textFieldControllerName',
+      DatabaseHelper.columnCat  : '$_btnSelectedVal',
+      DatabaseHelper.columnSize  : '$_textFieldControllerSize',
+      DatabaseHelper.columnFit  : '$_fit',
+      DatabaseHelper.columnWeather  : '$_weather',
+      DatabaseHelper.columnRating  : '$_rating',
+      DatabaseHelper.columnDesc  : '$_textFieldControllerDesc',
+      DatabaseHelper.columnPic  : '$_cameraImage',
+    };
+    final id = await db.insert(row);
+    print('inserted row id: $id');
+  }
 }
+
+

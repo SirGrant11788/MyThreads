@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mythreads/services/db.dart';
 import 'package:mythreads/ui/uiAddProduct.dart';
 import 'package:weather/weather.dart';
 
@@ -39,6 +40,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final db = DatabaseHelper.instance;
+  var dbMap;//testing
+  List <String> dbList = List<String>();//testing
+  List <Tab> catTabList = List <Tab>();
   String weatherToday = "weather";
   String weatherIcon = '01d';
   WeatherStation weatherStation =
@@ -55,8 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
   loadWeatherState() {
     loadWeatherToday();
     print(weatherIcon.toString() + " WeatherState: " + weatherToday); //check
-    setState(() {
-    });
+    setState(() {});
   }
 
   int chipPref = 0; //use to 'search' in tabs
@@ -76,7 +80,28 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     loadWeatherState();
-
+    _query();
+    List <Tab> tabs;
+    final _kTabs = <Tab>[
+      Tab(text: 'NK'),
+      Tab(text: 'ActiveTools'),
+      Tab(text: 'Coxmate'),
+      Tab(text: 'Concept 2'),
+      Tab(text: 'Croker'),
+      Tab(text: 'Hudson'),
+      Tab(text: 'Swift'),
+      Tab(text: 'Rowshop'),
+    ];
+    final _kTabPages = <Tab>[
+      Tab(text: 'NK'),
+       Tab(text: 'ActiveTools'),
+       //Tab(text: 'Coxmate'),
+      // Tab(text: 'Concept 2'),
+      // Tab(text: 'Croker'),
+      // Tab(text: 'Hudson'),
+      // Tab(text: 'Swift'),
+      // Tab(text: 'Rowshop'),
+    ];
     //print(loadWeather());
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -84,45 +109,57 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.accessibility_new),
-        mini: true,
-        onPressed: () {
-          Fluttertoast.showToast(
-                    msg: 'button pressed',
-                    toastLength: Toast.LENGTH_LONG,
-                  );
-        },
-      ),
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        notchMargin: 2.0,
-        child: new Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
+    return DefaultTabController(
+      length: catTabList.toSet().toList().length,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.network(
+                'http://openweathermap.org/img/wn/$weatherIcon@2x.png',
+                fit: BoxFit.contain,
+                height: 32,
+              ),
+              InkWell(
+                child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(weatherToday)),
+                onTap: () {
+                  loadWeatherState();
+                },
+              ),
+            ],
+          ),
+          leading: PopupMenuButton<String>(
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                child: Text('Stuff!'),
+              ),
+              const PopupMenuItem<String>(
+                child: Text('Other Stuff!'),
+              ),
+              const PopupMenuItem<String>(
+                child: Text('Backup'),
+              ),
+              const PopupMenuItem<String>(
+                child: Text('Settings'),
+              ),
+            ],
+          ),
+          actions: <Widget>[
             IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => ToDo()),
-                  // );
-                  Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddProductPage()),
-              );
-                }),
-            IconButton(
-              icon: Icon(Icons.shopping_basket),
+              icon: Icon(Icons.search),
               onPressed: () {
-                // Navigator.of(context).push(MaterialPageRoute(
-                //     builder: (BuildContext context) => MyWebView(
-                //           title: "Macarbi Website",
-                //           selectedUrl: "https://www.macarbi.com",
-                //         )));
+                Fluttertoast.showToast(
+                  msg: 'button pressed',
+                  toastLength: Toast.LENGTH_LONG,
+                );
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.account_circle),
+              onPressed: () {
                 Fluttertoast.showToast(
                   msg: 'button pressed',
                   toastLength: Toast.LENGTH_LONG,
@@ -130,147 +167,164 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
           ],
-        ),
-      ),
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.network(
-              'http://openweathermap.org/img/wn/$weatherIcon@2x.png',
-              fit: BoxFit.contain,
-              height: 32,
-            ),
-            
-InkWell(                        
-        child:
-            Container(
-                padding: const EdgeInsets.all(8.0), child: Text(weatherToday)),
-                onTap: () {                          
-        loadWeatherState();
-        },
-),
-          ],
-        ),
-        leading: PopupMenuButton<String>(
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-            const PopupMenuItem<String>(
-              child: Text('Stuff!'),
-            ),
-            const PopupMenuItem<String>(
-              child: Text('Other Stuff!'),
-            ),
-            const PopupMenuItem<String>(
-              child: Text('Backup'),
-            ),
-            const PopupMenuItem<String>(
-              child: Text('Settings'),
-            ),
-          ],
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              Fluttertoast.showToast(
-                msg: 'button pressed',
-                toastLength: Toast.LENGTH_LONG,
-              );
-            },
+          bottom: TabBar(
+            isScrollable: true,
+            tabs:catTabList.toSet().toList(),
           ),
-          IconButton(
-            icon: Icon(Icons.account_circle),
-            onPressed: () {
-              Fluttertoast.showToast(
-                msg: 'button pressed',
-                toastLength: Toast.LENGTH_LONG,
-              );
-            },
+        ),
+        body: TabBarView(
+          children: _kTabPages,
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.accessibility_new),
+          mini: true,
+          onPressed: () {
+            Fluttertoast.showToast(
+              msg: 'button pressed',
+              toastLength: Toast.LENGTH_LONG,
+            );
+          },
+        ),
+        bottomNavigationBar: BottomAppBar(
+          shape: CircularNotchedRectangle(),
+          notchMargin: 2.0,
+          child: new Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => ToDo()),
+                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AddProductPage()),
+                    );
+                  }),
+              IconButton(
+                icon: Icon(Icons.shopping_basket),
+                onPressed: () {
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (BuildContext context) => MyWebView(
+                  //           title: "Macarbi Website",
+                  //           selectedUrl: "https://www.macarbi.com",
+                  //         )));
+                  Fluttertoast.showToast(
+                    msg: 'button pressed',
+                    toastLength: Toast.LENGTH_LONG,
+                  );
+                },
+              ),
+            ],
           ),
-        ],
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          children: <Widget>[
-            Row(//favs carasole
-                ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max, //chips pref
-              children: [
-                ChoiceChip(
-                  label: Text('all'),
-                  selected: chipPref == 0,
-                  onSelected: (value) {
-                    setState(() {
-                      chipPref = 0;
-                    });
-                  },
-                ),
-                ChoiceChip(
-                  label: Text('cold'),
-                  selected: chipPref == 1,
-                  onSelected: (value) {
-                    setState(() {
-                      chipPref = 1;
-                    });
-                  },
-                ),
-                ChoiceChip(
-                  label: Text('chilly'),
-                  selected: chipPref == 2,
-                  onSelected: (value) {
-                    setState(() {
-                      chipPref = 2;
-                    });
-                  },
-                ),
-                ChoiceChip(
-                  label: Text('mild'),
-                  selected: chipPref == 3,
-                  onSelected: (value) {
-                    setState(() {
-                      chipPref = 3;
-                    });
-                  },
-                ),
-                ChoiceChip(
-                  label: Text('warm'),
-                  selected: chipPref == 4,
-                  onSelected: (value) {
-                    setState(() {
-                      chipPref = 4;
-                    });
-                  },
-                ),
-                ChoiceChip(
-                  label: Text('hot'),
-                  selected: chipPref == 5,
-                  onSelected: (value) {
-                    setState(() {
-                      chipPref = 5;
-                    });
-                  },
-                ),
-                ChoiceChip(
-                  label: Text('other'),
-                  selected: chipPref == 6,
-                  onSelected: (value) {
-                    setState(() {
-                      chipPref = 6;
-                    });
-                  },
-                )
-              ],
-            ),
-            Row(//tabs and list
-
-                )
-          ],
         ),
       ),
     );
   }
+
+   _query() async {
+    final allRows = await db.queryAllRows();
+    print('query all rows:');
+     //allRows.forEach((row) => print(row));
+     //dbList.clear();
+     //dbMap.clear();
+    //  allRows.forEach((row) => dbMap.putIfAbsent(row['_id'].toString(), row['name']));
+    //  print('dbMap: $dbMap');
+     //print('dblist: ${dbList.toSet().toList()}');
+     //return dbList.toSet().toList();
+     //print('LIST: ${dbHome.length}');
+    //  setState(() {
+    //    dbList.toSet().toList();
+    //  });
+    //Tab(text: 'NK')
+    catTabList.clear();
+    //allRows.forEach((row) => catTabList.add(Tab(text: '${row['cat']}')));
+    allRows.forEach((row){
+      if(!catTabList.toString().contains('${row['cat']}')){
+        //print('TEST: ${allRows[1]["cat"]}');
+        catTabList.add(Tab(text: '${row['cat']}'));
+        //print('if');
+      }
+    });
+    dbMap=allRows;
+    //catTabList = catTabList.toSet().toList();
+    //allRows.forEach((row) => catTabList.add(row['cat']));
+    //LENGTH: 3 TAB: [Tab(text: "Suit"), Tab(text: "Suit"), Tab(text: "Shorts")]
+    print('LENGTH: ${catTabList.length} TAB: ${catTabList} dbMap: ${dbMap[0]['name']}');
+    //return catTabList;
+  }
 }
+
+// Row(
+//   mainAxisAlignment: MainAxisAlignment.center,
+//   mainAxisSize: MainAxisSize.max, //chips pref
+//   children: [
+//     ChoiceChip(
+//       label: Text('all'),
+//       selected: chipPref == 0,
+//       onSelected: (value) {
+//         setState(() {
+//           chipPref = 0;
+//         });
+//       },
+//     ),
+//     ChoiceChip(
+//       label: Text('cold'),
+//       selected: chipPref == 1,
+//       onSelected: (value) {
+//         setState(() {
+//           chipPref = 1;
+//         });
+//       },
+//     ),
+//     ChoiceChip(
+//       label: Text('chilly'),
+//       selected: chipPref == 2,
+//       onSelected: (value) {
+//         setState(() {
+//           chipPref = 2;
+//         });
+//       },
+//     ),
+//     ChoiceChip(
+//       label: Text('mild'),
+//       selected: chipPref == 3,
+//       onSelected: (value) {
+//         setState(() {
+//           chipPref = 3;
+//         });
+//       },
+//     ),
+//     ChoiceChip(
+//       label: Text('warm'),
+//       selected: chipPref == 4,
+//       onSelected: (value) {
+//         setState(() {
+//           chipPref = 4;
+//         });
+//       },
+//     ),
+//     ChoiceChip(
+//       label: Text('hot'),
+//       selected: chipPref == 5,
+//       onSelected: (value) {
+//         setState(() {
+//           chipPref = 5;
+//         });
+//       },
+//     ),
+//     ChoiceChip(
+//       label: Text('other'),
+//       selected: chipPref == 6,
+//       onSelected: (value) {
+//         setState(() {
+//           chipPref = 6;
+//         });
+//       },
+//     )
+//   ],
+// ),
