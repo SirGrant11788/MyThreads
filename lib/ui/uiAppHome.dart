@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -82,27 +84,32 @@ class _MyHomePageState extends State<MyHomePage> {
   loadList(){
 
 contTabList.clear();
-    print('catTabList.length ${catTabList.length}');
-    print('dbMap.length ${dbMap.length}');
+    
     for(int i=0;i < catTabList.length;i++){//run for number of available tabs
-    print("${catTabList[i].text}! vs ${dbMap[i]['cat']}!");
+    
       contTabList.add(
   //
   ListView.builder(
             itemCount: dbMap.length,
             itemBuilder: (ctx, index) {
 
-              return catTabList[i].text==dbMap[index]['cat']? new ListTile(
-            title: Text('${dbMap[index]['name']} $i!'),
+              return catTabList[i].text==dbMap[index]['cat']?
+              new Card(
+              child: new ListTile(
+            //leading:CircleAvatar(child: Image.file(File('${dbMap[index]['pic'].toString()}'))) ,
+            title: Text('${dbMap[index]['name']}'),
             subtitle: Text('${dbMap[index]['fit']} ${dbMap[index]['size']} ${dbMap[index]['cat']}'),
             trailing: Icon(Icons.arrow_right),
             onTap: (){Fluttertoast.showToast(
               msg: 'Item pressed',
               toastLength: Toast.LENGTH_SHORT,
             );},
-                        ):new ListTile();//todo fix
+                        ),
+                        )
+                        :new Card();
 
-            }),
+            },
+            ),
 
 );
     
@@ -283,7 +290,7 @@ final _kTabPages = <Tab>[
     //catTabList = catTabList.toSet().toList();
     //allRows.forEach((row) => catTabList.add(row['cat']));
     //LENGTH: 3 TAB: [Tab(text: "Suit"), Tab(text: "Suit"), Tab(text: "Shorts")]
-    print('LENGTH: ${catTabList.length} TAB: ${catTabList}');
+    //print('LENGTH: ${catTabList.length} TAB: ${catTabList}');
     //return catTabList;
 
     loadList();
