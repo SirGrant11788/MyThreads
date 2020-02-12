@@ -34,6 +34,7 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
+  
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -59,9 +60,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   loadWeatherState() {
-    loadWeatherToday();
-    print(weatherIcon.toString() + " WeatherState: " + weatherToday); //check
-    setState(() {});
+    //loadWeatherToday();
+    //print(weatherIcon.toString() + " WeatherState: " + weatherToday); //check
+    setState(() {loadWeatherToday();
+    print(weatherIcon.toString() + " WeatherState: " + weatherToday); });
   }
 
   int chipPref = 0; //use to 'search' in tabs
@@ -77,43 +79,54 @@ class _MyHomePageState extends State<MyHomePage> {
   //     _counter++;
   //   });
   // }
+  loadList(){
+
+contTabList.clear();
+    print('catTabList.length ${catTabList.length}');
+    print('dbMap.length ${dbMap.length}');
+    for(int i=0;i < catTabList.length;i++){//run for number of available tabs
+    print("${catTabList[i].text}! vs ${dbMap[i]['cat']}!");
+      contTabList.add(
+  //
+  ListView.builder(
+            itemCount: dbMap.length,
+            itemBuilder: (ctx, index) {
+
+              return catTabList[i].text==dbMap[index]['cat']? new ListTile(
+            title: Text('${dbMap[index]['name']} $i!'),
+            subtitle: Text('${dbMap[index]['fit']} ${dbMap[index]['size']} ${dbMap[index]['cat']}'),
+            trailing: Icon(Icons.arrow_right),
+            onTap: (){Fluttertoast.showToast(
+              msg: 'Item pressed',
+              toastLength: Toast.LENGTH_SHORT,
+            );},
+                        ):new ListTile();//todo fix
+
+            }),
+
+);
+    
+    }
+
+  }
+
+    
 
   @override
   Widget build(BuildContext context) {
+
     loadWeatherState();
     _query();
-    contTabList.clear();
-    for(int i=0;i < catTabList.length;i++){
-      //print("loop check $i");
-      contTabList.add(Center(
-  child: Text('HELLLO THERE! ${i} and '),
-));
-    }
-//     contTabList.add(Center(
-//   child: Text('HELLLO THERE!  '),
-// ));
-// contTabList.add(Center(
-//   child: Text('HELLLO THERE! and '),
-// ));
+    //loadList();
+
+
 final _kTabPages = <Tab>[
-      Tab(text: 'Welcome to MyThreads'),
-      //Tab(text: 'ActiveTools'),
-      // Tab(text: 'Coxmate'),
-      // Tab(text: 'Concept 2'),
-      // Tab(text: 'Croker'),
-      // Tab(text: 'Hudson'),
-      // Tab(text: 'Swift'),
-      // Tab(text: 'Rowshop'),
+      Tab(text: 'Welcome to MyThreads'),//todo proper intro
+      
     ];
     final _kTabs = <Tab>[
       Tab(text: 'WELCOME'),
-      //Tab(text: 'ActiveTools'),
-      // Tab(text: 'Coxmate'),
-      // Tab(text: 'Concept 2'),
-      // Tab(text: 'Croker'),
-      // Tab(text: 'Hudson'),
-      // Tab(text: 'Swift'),
-      // Tab(text: 'Rowshop'),
+      
     ];
 
     // This method is rerun every time setState is called, for instance as done
@@ -265,13 +278,17 @@ final _kTabPages = <Tab>[
         //print('if');
       }
     });
+    
     dbMap = allRows;
     //catTabList = catTabList.toSet().toList();
     //allRows.forEach((row) => catTabList.add(row['cat']));
     //LENGTH: 3 TAB: [Tab(text: "Suit"), Tab(text: "Suit"), Tab(text: "Shorts")]
     print('LENGTH: ${catTabList.length} TAB: ${catTabList}');
     //return catTabList;
+
+    loadList();
   }
+
 }
 
 // Row(
