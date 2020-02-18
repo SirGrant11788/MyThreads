@@ -77,8 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
             return catTabList[i].text == dbMap[index]['cat']
                 ? new Card(
                     child: new ListTile(
-                      leading:Image.file(File('${dbMap[index]['pic'].toString()}'))!=null
-                      ? CircleAvatar(child: Image.file(File('${dbMap[index]['pic'].toString()}')))
+                      leading:'${dbMap[index]['pic'].toString()}'!="" ||'${dbMap[index]['pic'].toString()}'!=null
+                      ? CircleAvatar(child: Image.file(new File('${dbMap[index]['pic'].toString().substring(6).replaceAll("'", "")}')))
                       : CircleAvatar(child: Icon(Icons.accessibility)),
                       title: Text('${dbMap[index]['name']}'),
                       subtitle: Text(
