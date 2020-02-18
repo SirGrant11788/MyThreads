@@ -28,9 +28,12 @@ class _AddProductPageState extends State<AddProductPage> {
   Future _pickImageFromCamera() async {
     File image = await ImagePicker.pickImage(
         source: ImageSource.camera);
-
+// final String path = await getApplicationDocumentsDirectory().path;
+// final var fileName = basename(file.path);
+//final File localImage = await image.copy('$path/$fileName');
     setState(() {
       _cameraImage = image;
+      //_cameraImage = localImage;
     });
   }
 
@@ -44,7 +47,7 @@ class _AddProductPageState extends State<AddProductPage> {
     _rating = "";
   }
 
-//todo dynamic list
+//todo dynamic list from DB
   static const menuItems = <String>[
     'Shirts',
     'T-shirts',
@@ -304,11 +307,18 @@ class _AddProductPageState extends State<AddProductPage> {
                       msg: 'Item Added',
                       toastLength: Toast.LENGTH_LONG,
                     );
+                    if(_textFieldControllerName.text !=""|| _btnSelectedVal!=""||_textFieldControllerSize.text!=""||_fit!=""||_weather!=""||_rating!=""||_textFieldControllerDesc.text!=""||_cameraImage.uri !=null){
                     _insert(_textFieldControllerName.text,_btnSelectedVal,_textFieldControllerSize.text,_fit,_weather,_rating,_textFieldControllerDesc.text,_cameraImage.uri);
                   Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => MyApp()),
               );
+                    }else{
+Fluttertoast.showToast(
+                  msg: 'Please complete all the fields',
+                  toastLength: Toast.LENGTH_LONG,
+                );
+                    }
                   },
                 ),
               ],

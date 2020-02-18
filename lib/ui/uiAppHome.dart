@@ -36,7 +36,6 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
-  
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -53,98 +52,74 @@ class _MyHomePageState extends State<MyHomePage> {
   WeatherStation weatherStation =
       new WeatherStation("996cc4f3b136aea607960591dd64e7a5");
 
-  Future<String> loadWeatherToday() async {
+  Future<void> loadWeatherToday() async {
     Weather weather = (await weatherStation.currentWeather());
     weatherToday =
         '${weather.weatherMain} ${weather.tempMin.celsius.round()}°C/${weather.tempMax.celsius.round()}°C';
     weatherIcon = weather.weatherIcon;
-    return weatherToday;
-  }
-
-  loadWeatherState() {
-    //loadWeatherToday();
-    //print(weatherIcon.toString() + " WeatherState: " + weatherToday); //check
-    setState(() {loadWeatherToday();
-    print(weatherIcon.toString() + " WeatherState: " + weatherToday); });
+    print(weatherIcon.toString() + " WeatherState: " + weatherToday);
+    //return weatherToday;
   }
 
   int chipPref = 0; //use to 'search' in tabs
-  // int _counter = 0;
+  
+  loadList() {
+    contTabList.clear();
 
-  // void _incrementCounter() {
-  //   setState(() {
-  //     // This call to setState tells the Flutter framework that something has
-  //     // changed in this State, which causes it to rerun the build method below
-  //     // so that the display can reflect the updated values. If we changed
-  //     // _counter without calling setState(), then the build method would not be
-  //     // called again, and so nothing would appear to happen.
-  //     _counter++;
-  //   });
-  // }
-  loadList(){
+    for (int i = 0; i < catTabList.length; i++) {
+      //run for number of available tabs
 
-contTabList.clear();
-    
-    for(int i=0;i < catTabList.length;i++){//run for number of available tabs
-    
       contTabList.add(
-  //
-  ListView.builder(
-            itemCount: dbMap.length,
-            itemBuilder: (ctx, index) {
-
-              return catTabList[i].text==dbMap[index]['cat']?
-              new Card(
-              child: new ListTile(
-            //leading:CircleAvatar(child: Image.file(File('${dbMap[index]['pic'].toString()}'))) ,
-            title: Text('${dbMap[index]['name']}'),
-            subtitle: Text('${dbMap[index]['fit']} ${dbMap[index]['size']} ${dbMap[index]['cat']}'),
-            trailing: Icon(Icons.arrow_right),
-            onTap: (){Fluttertoast.showToast(
-              msg: 'Item pressed',
-              toastLength: Toast.LENGTH_SHORT,
-            );},
-                        ),
-                        )
-                        :new Card();
-
-            },
-            ),
-
-);
-    
+        //
+        ListView.builder(
+          itemCount: dbMap.length,
+          itemBuilder: (ctx, index) {
+            return catTabList[i].text == dbMap[index]['cat']
+                ? new Card(
+                    child: new ListTile(
+                      leading:Image.file(File('${dbMap[index]['pic'].toString()}'))!=null
+                      ? CircleAvatar(child: Image.file(File('${dbMap[index]['pic'].toString()}')))
+                      : CircleAvatar(child: Icon(Icons.accessibility)),
+                      title: Text('${dbMap[index]['name']}'),
+                      subtitle: Text(
+                          '${dbMap[index]['fit']} ${dbMap[index]['size']} ${dbMap[index]['cat']}'),
+                      trailing: Icon(Icons.arrow_right),
+                      onTap: () {
+                        Fluttertoast.showToast(
+                          msg: 'Item pressed',
+                          toastLength: Toast.LENGTH_SHORT,
+                        );
+                      },
+                    ),
+                  )
+                : new Card();
+          },
+        ),
+      );
     }
-
   }
-
-    
 
   @override
   Widget build(BuildContext context) {
-
-    loadWeatherState();
+    
     _query();
-    //loadList();
+    
 
-
-final _kTabPages = <Tab>[
-      Tab(text: 'Welcome to MyThreads'),//todo proper intro
-      
+    final _kTabPages = <Tab>[
+      Tab(text: 'Welcome to MyThreads'), //todo proper intro
     ];
     final _kTabs = <Tab>[
       Tab(text: 'WELCOME'),
-      
     ];
 
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     
+return FutureBuilder(
+      future: loadWeatherToday(),
+      builder: (context, snapshot){
     return DefaultTabController(
-      length: catTabList.length ==0 ? _kTabs.length: catTabList.length,//catTabList.length,
+      length: catTabList.length == 0
+          ? _kTabs.length
+          : catTabList.length, //catTabList.length,
       child: Scaffold(
         appBar: AppBar(
           title: Row(
@@ -160,7 +135,7 @@ final _kTabPages = <Tab>[
                     padding: const EdgeInsets.all(8.0),
                     child: Text(weatherToday)),
                 onTap: () {
-                  loadWeatherState();
+                  loadWeatherToday();
                 },
               ),
             ],
@@ -168,16 +143,16 @@ final _kTabPages = <Tab>[
           leading: PopupMenuButton<String>(
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               const PopupMenuItem<String>(
-                child: Text('Stuff!'),
-              ),
-              const PopupMenuItem<String>(
-                child: Text('Other Stuff!'),
+                child: Text('Shop'),
               ),
               const PopupMenuItem<String>(
                 child: Text('Backup'),
               ),
               const PopupMenuItem<String>(
                 child: Text('Settings'),
+              ),
+              const PopupMenuItem<String>(
+                child: Text('Info'),
               ),
             ],
           ),
@@ -186,7 +161,7 @@ final _kTabPages = <Tab>[
               icon: Icon(Icons.search),
               onPressed: () {
                 Fluttertoast.showToast(
-                  msg: 'button pressed',
+                  msg: 'search pressed',
                   toastLength: Toast.LENGTH_LONG,
                 );
               },
@@ -195,7 +170,7 @@ final _kTabPages = <Tab>[
               icon: Icon(Icons.account_circle),
               onPressed: () {
                 Fluttertoast.showToast(
-                  msg: 'button pressed',
+                  msg: 'account pressed',
                   toastLength: Toast.LENGTH_LONG,
                 );
               },
@@ -203,11 +178,13 @@ final _kTabPages = <Tab>[
           ],
           bottom: TabBar(
             isScrollable: true,
-            tabs: catTabList.length ==0 ?_kTabs:catTabList,//catTabList,
+            tabs: catTabList.length == 0 ? _kTabs : catTabList, //catTabList,
           ),
         ),
         body: TabBarView(
-          children: catTabList.length ==0 ? _kTabPages:contTabList,//contTabList,//_kTabPages,
+          children: catTabList.length == 0
+              ? _kTabPages
+              : contTabList, //contTabList,//_kTabPages,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
@@ -258,7 +235,9 @@ final _kTabPages = <Tab>[
         ),
       ),
     );
+      });
   }
+
 
   _query() async {
     final allRows = await db.queryAllRows();
@@ -275,7 +254,7 @@ final _kTabPages = <Tab>[
     //    dbList.toSet().toList();
     //  });
     //Tab(text: 'NK')
-    
+
     catTabList.clear();
     //allRows.forEach((row) => catTabList.add(Tab(text: '${row['cat']}')));
     allRows.forEach((row) {
@@ -285,7 +264,7 @@ final _kTabPages = <Tab>[
         //print('if');
       }
     });
-    
+
     dbMap = allRows;
     //catTabList = catTabList.toSet().toList();
     //allRows.forEach((row) => catTabList.add(row['cat']));
@@ -295,7 +274,6 @@ final _kTabPages = <Tab>[
 
     loadList();
   }
-
 }
 
 // Row(

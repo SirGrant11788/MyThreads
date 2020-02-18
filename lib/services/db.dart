@@ -9,8 +9,11 @@ class DatabaseHelper {
   static final _databaseName = "MyDatabase.db";
   static final _databaseVersion = 1;
 
-  static final table = 'my_table';
-  
+  static final table = 'my_table';//main table
+  static final tableFav = 'fav_table';//fav table
+  static final tablePack = 'pack_table';//pack table
+
+  //main table
   static final columnId = '_id';
   static final columnName = 'name';
   static final columnCat = 'cat';
@@ -20,6 +23,13 @@ class DatabaseHelper {
   static final columnRating = 'rating';
   static final columnDesc = 'desc';
   static final columnPic = 'pic';
+
+  //fav table
+  static final columnIdFav = '_id_fav';
+  static final columnFav = 'fav';
+  //pack table
+  static final columnIdPack = '_id_pack';
+  static final columnPack = 'pack';
 
   // make this a singleton class
   DatabaseHelper._privateConstructor();
@@ -56,6 +66,16 @@ class DatabaseHelper {
             $columnRating TEXT,
             $columnDesc TEXT,
             $columnPic TEXT
+          );
+          CEATE TABLE $tableFav (
+            $columnId INTEGER FOREIGN KEY REFERENCES $table($columnId INTEGER),
+            $columnIdFav INTEGER PRIMARY KEY,
+            $columnFav TEXT NOT NULL
+          )
+          CEATE TABLE $tablePack (
+            $columnId INTEGER FOREIGN KEY REFERENCES $table($columnId INTEGER),
+            $columnIdPack INTEGER PRIMARY KEY,
+            $columnPack TEXT NOT NULL
           )
           ''');
   }
@@ -69,12 +89,28 @@ class DatabaseHelper {
     Database db = await instance.database;
     return await db.insert(table, row);
   }
+  Future<int> insertFav(Map<String, dynamic> row) async {
+    Database db = await instance.database;
+    return await db.insert(tableFav, row);
+  }
+  Future<int> insertPack(Map<String, dynamic> row) async {
+    Database db = await instance.database;
+    return await db.insert(tablePack, row);
+  }
 
   // All of the rows are returned as a list of maps, where each map is 
   // a key-value list of columns.
   Future<List<Map<String, dynamic>>> queryAllRows() async {
     Database db = await instance.database;
     return await db.query(table);
+  }
+  Future<List<Map<String, dynamic>>> queryAllRowsFav() async {
+    Database db = await instance.database;
+    return await db.query(tableFav);
+  }
+  Future<List<Map<String, dynamic>>> queryAllRowsPack() async {
+    Database db = await instance.database;
+    return await db.query(tablePack);
   }
 
   // //ALL catagories
@@ -89,6 +125,14 @@ class DatabaseHelper {
     Database db = await instance.database;
     return Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM $table'));
   }
+  Future<int> queryRowCountFav() async {
+    Database db = await instance.database;
+    return Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM $tableFav'));
+  }
+  Future<int> queryRowCountPack() async {
+    Database db = await instance.database;
+    return Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM $tablePack'));
+  }
 
   // We are assuming here that the id column in the map is set. The other 
   // column values will be used to update the row.
@@ -97,11 +141,29 @@ class DatabaseHelper {
     int id = row[columnId];
     return await db.update(table, row, where: '$columnId = ?', whereArgs: [id]);
   }
+  Future<int> updateFav(Map<String, dynamic> row) async {
+    Database db = await instance.database;
+    int id = row[columnIdFav];
+    return await db.update(table, row, where: '$columnIdFav = ?', whereArgs: [id]);
+  }
+  Future<int> updatePack(Map<String, dynamic> row) async {
+    Database db = await instance.database;
+    int id = row[columnIdPack];
+    return await db.update(table, row, where: '$columnIdPack = ?', whereArgs: [id]);
+  }
 
   // Deletes the row specified by the id. The number of affected rows is 
   // returned. This should be 1 as long as the row exists.
   Future<int> delete(int id) async {
     Database db = await instance.database;
     return await db.delete(table, where: '$columnId = ?', whereArgs: [id]);
+  }
+  Future<int> deleteFav(int id) async {
+    Database db = await instance.database;
+    return await db.delete(table, where: '$columnIdFav = ?', whereArgs: [id]);
+  }
+  Future<int> deletePack(int id) async {
+    Database db = await instance.database;
+    return await db.delete(table, where: '$columnIdPack = ?', whereArgs: [id]);
   }
 }
