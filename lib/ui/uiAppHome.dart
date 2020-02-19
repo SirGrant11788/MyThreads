@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   int chipPref = 0; //use to 'search' in tabs
-  
+  //loads the items into the correct tabs
   loadList() {
     contTabList.clear();
 
@@ -70,15 +70,15 @@ class _MyHomePageState extends State<MyHomePage> {
       //run for number of available tabs
 
       contTabList.add(
-        //
         ListView.builder(
           itemCount: dbMap.length,
           itemBuilder: (ctx, index) {
-            return catTabList[i].text == dbMap[index]['cat']
-                ? new Card(
+            return
+             catTabList[i].text == dbMap[index]['cat']? 
+                new Card(
                     child: new ListTile(
                       leading:'${dbMap[index]['pic'].toString()}'!="" ||'${dbMap[index]['pic'].toString()}'!=null
-                      ? CircleAvatar(child: Image.file(new File('${dbMap[index]['pic'].toString().substring(6).replaceAll("'", "")}')))
+                      ? Image.file(new File('${dbMap[index]['pic'].toString().substring(6).replaceAll("'", "")}'))
                       : CircleAvatar(child: Icon(Icons.accessibility)),
                       title: Text('${dbMap[index]['name']}'),
                       subtitle: Text(
@@ -102,9 +102,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     
-    _query();
+    _query();//fetches items from db
     
-
+//default if nothing is in the db
     final _kTabPages = <Tab>[
       Tab(text: 'Welcome to MyThreads'), //todo proper intro
     ];
@@ -119,7 +119,7 @@ return FutureBuilder(
     return DefaultTabController(
       length: catTabList.length == 0
           ? _kTabs.length
-          : catTabList.length, //catTabList.length,
+          : catTabList.length, 
       child: Scaffold(
         appBar: AppBar(
           title: Row(
@@ -176,16 +176,76 @@ return FutureBuilder(
               },
             ),
           ],
-          bottom: TabBar(
-            isScrollable: true,
-            tabs: catTabList.length == 0 ? _kTabs : catTabList, //catTabList,
+          //¯\_(ツ)_/¯
+          ),body: new ListView(
+        children: <Widget>[
+new Container(
+            alignment: Alignment.center,
+            color: Colors.blueGrey,//testing todo
+            height:  MediaQuery.of(context).size.height / 3.3,//fit a percentage of the device screen
+            child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: <Widget>[
+              Padding(padding:const EdgeInsets.all(8.0),),
+              Container(
+                width: 160.0,
+                color: Colors.red,
+              ),
+              Padding(padding:const EdgeInsets.all(8.0),),
+              Container(
+                width: 160.0,
+                color: Colors.blue,
+              ),
+              Padding(padding:const EdgeInsets.all(8.0),),
+              Container(
+                width: 160.0,
+                color: Colors.green,
+              ),
+              Padding(padding:const EdgeInsets.all(8.0),),
+              Container(
+                width: 160.0,
+                color: Colors.yellow,
+              ),
+              Padding(padding:const EdgeInsets.all(8.0),),
+              Container(
+                width: 160.0,
+                color: Colors.orange,
+              ),
+              Padding(padding:const EdgeInsets.all(8.0),),
+            ],
           ),
-        ),
-        body: TabBarView(
+          ),
+          new Container(
+            decoration: new BoxDecoration(color: Theme.of(context).primaryColor),
+            alignment: Alignment.center,
+            child:TabBar(
+            isScrollable: true,
+            tabs: catTabList.length == 0 ? _kTabs : catTabList, 
+          ),
+          ),
+          new Container(
+            alignment: Alignment.center,
+            color: Colors.blueGrey,//testing todo
+            height:  MediaQuery.of(context).size.height / 2.08,//fit a percentage of the device screen
+            child:TabBarView(
           children: catTabList.length == 0
               ? _kTabPages
-              : contTabList, //contTabList,//_kTabPages,
+              : contTabList, 
         ),
+          ),
+        ],),
+        //¯\_(ツ)_/¯
+        //   bottom: TabBar(
+        //     isScrollable: true,
+        //     tabs: catTabList.length == 0 ? _kTabs : catTabList, 
+        //   ),
+        // ),
+        // body: 
+        // TabBarView(
+        //   children: catTabList.length == 0
+        //       ? _kTabPages
+        //       : contTabList, 
+        // ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.accessibility_new),
