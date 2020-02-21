@@ -79,7 +79,7 @@ class _AddProductPageState extends State<AddProductPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text("Add Product"),
+        title: Icon(Icons.add),
       ),
       body: SingleChildScrollView(
         child: Column(

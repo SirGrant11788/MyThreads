@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mythreads/services/db.dart';
 import 'package:mythreads/ui/uiAddProduct.dart';
+import 'package:mythreads/ui/uiViewer.dart';
 import 'package:weather/weather.dart';
 
 class MyApp extends StatelessWidget {
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'MyThreads',
       theme: ThemeData(
         // This is the theme of your application.
 
@@ -181,7 +182,7 @@ return FutureBuilder(
         children: <Widget>[
 new Container(
             alignment: Alignment.center,
-            color: Colors.blueGrey,//testing todo
+            color: Colors.blueGrey[50],//testing todo
             height:  MediaQuery.of(context).size.height / 3.3,//fit a percentage of the device screen
             child: ListView(
             scrollDirection: Axis.horizontal,
@@ -225,7 +226,7 @@ new Container(
           ),
           new Container(
             alignment: Alignment.center,
-            color: Colors.blueGrey,//testing todo
+            color: Colors.blueGrey[50],//testing todo
             height:  MediaQuery.of(context).size.height / 2.08,//fit a percentage of the device screen
             child:TabBarView(
           children: catTabList.length == 0
@@ -251,10 +252,9 @@ new Container(
           child: const Icon(Icons.accessibility_new),
           mini: true,
           onPressed: () {
-            Fluttertoast.showToast(
-              msg: 'button pressed',
-              toastLength: Toast.LENGTH_LONG,
-            );
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ViewerPage()));
           },
         ),
         bottomNavigationBar: BottomAppBar(
