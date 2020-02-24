@@ -103,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     
-    //_query();//fetches items from db
+    _query();//fetches items from db
     
 //default if nothing is in the db
     final _kTabPages = <Tab>[

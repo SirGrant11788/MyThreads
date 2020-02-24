@@ -77,7 +77,7 @@ class _AddProductPageState extends State<AddProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,//double check
       appBar: AppBar(
         title: Icon(Icons.add),
       ),
