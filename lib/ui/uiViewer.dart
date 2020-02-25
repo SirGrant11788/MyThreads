@@ -16,14 +16,16 @@ class _ViewerPageState extends State<ViewerPage> {
 
 // final itemSize = 1.0;//testing Todo
   ScrollController _controller = ScrollController();
-  TrackingScrollController _trackingScrollController = TrackingScrollController();
+  TrackingScrollController _trackingScrollController =
+      TrackingScrollController();
 
-@override
+  @override
   void initState() {
     _controller = ScrollController();
     super.initState();
   }
-   @override
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -68,7 +70,6 @@ class _ViewerPageState extends State<ViewerPage> {
 
     //create choice chips
 
-
     for (int i = 0; i < catList.length; i++) {
       chipCat.add(
         ChoiceChip(
@@ -107,7 +108,6 @@ class _ViewerPageState extends State<ViewerPage> {
 //                 ),
 // );
 // }
-
   }
 
   _onStartScroll(ScrollMetrics metrics) {
@@ -133,13 +133,12 @@ class _ViewerPageState extends State<ViewerPage> {
     // testing
     //_query();
     //todo offset starting pos
-                      //_trackingScrollController.jumpTo((MediaQuery.of(context).size.width/2));
+    //_trackingScrollController.jumpTo((MediaQuery.of(context).size.width/2));
 
     return FutureBuilder(
         future: _query(),
         builder: (context, snapshot) {
           return Scaffold(
-            
             appBar: AppBar(
               //leading: Icon(Icons.accessibility_new),
               title: Text('weather TODO'),
@@ -151,7 +150,6 @@ class _ViewerPageState extends State<ViewerPage> {
                       msg: 'Fav pressed',
                       toastLength: Toast.LENGTH_LONG,
                     );
-                   
                   },
                 ),
               ],
@@ -159,9 +157,9 @@ class _ViewerPageState extends State<ViewerPage> {
             body: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  // ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.max,
@@ -179,9 +177,10 @@ class _ViewerPageState extends State<ViewerPage> {
                       new Center(
                         child: new Container(
                           width: MediaQuery.of(context).size.height * 0.5294,
-                          color: Colors.green,
+                          color: Colors.blueGrey[50],
                           // height: MediaQuery.of(context).size.height * 0.765,//with second chip row
-                          height: MediaQuery.of(context).size.height * 0.822,//without second chip row
+                          height: MediaQuery.of(context).size.height *
+                              0.8425, //without second chip row
                           child: ListView.builder(
                               scrollDirection: Axis.vertical,
                               itemCount: catList.length,
@@ -199,75 +198,121 @@ class _ViewerPageState extends State<ViewerPage> {
                                                     .size
                                                     .height *
                                                 0.1,
-                                            color: Colors.blue,
+                                            color: Colors.blueGrey[70],
                                             height: MediaQuery.of(context)
                                                     .size
                                                     .height *
-                                                0.2,//size of
+                                                0.2, //size of
                                             child: Center(
-                                              child: 
-                                              
-NotificationListener<ScrollNotification>(
-              onNotification: (scrollNotification) {
-                if (scrollNotification is ScrollStartNotification) {
-                  _onStartScroll(scrollNotification.metrics);
-                } else if (scrollNotification is ScrollUpdateNotification) {
-                  _onUpdateScroll(scrollNotification.metrics);
-                } else if (scrollNotification is ScrollEndNotification) {
-                  _onEndScroll(scrollNotification.metrics);
-                  debugPrint('end scroll ${scrollNotification.metrics.pixels}');
-                  //scrollNotification.context.size = end scroll Size(424.0, 81.6)
-                  
-                }
-                return false;
-              },
-child:
-                                              ListView.builder(
-                                                controller: _trackingScrollController,
-                                               // controller: _controller,
-                                                shrinkWrap: true,
-                                                        physics: PageScrollPhysics(),//stepping through the scroll 
-                                                  // physics: ScrollPhysics(),   
-                                                          
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  itemCount: dbMap.length,
-                                                 
-                                                  itemBuilder: (context, ind) {
-                                                    return catList[index]
-                                                                .text ==
-                                                            dbMap[ind]['cat']
-                                                        //&& !prefListweather.contains(weatherList.toString())
-                                                        ? Container(
-                                                            // width: MediaQuery.of(
-                                                            //             context)
-                                                            //         .size
-                                                            //         .width *
-                                                            //     0.5,
-                                                           width: (MediaQuery.of(context).size.width/1.019),///3,//remove three card will fill
-                                                            child: Card(
-                                                              color: Colors.amber,
-                                                              child: ListTile(
-                                                                title: '${dbMap[ind]['pic'].toString()}' !=
-                                                                            "" ||
-                                                                        '${dbMap[ind]['pic'].toString()}' !=
-                                                                            null
-                                                                    ? Image.file(
-                                                                        new File(
-                                                                            '${dbMap[ind]['pic'].toString().substring(6).replaceAll("'", "")}'),height: MediaQuery.of(context).size.height *0.18,)
-                                                                    : CircleAvatar(
-                                                                        child: Icon(
-                                                                            Icons.accessibility)),
-                                                                leading: Text(
-                                                                    '${dbMap[ind]['name'].toString()}',textAlign: TextAlign.center,),
-                                                               trailing: Text(
-                                                                   '${dbMap[ind]['size'].toString()} \n${dbMap[ind]['fit'].toString()}'),
+                                              child: NotificationListener<
+                                                  ScrollNotification>(
+                                                onNotification:
+                                                    (scrollNotification) {
+                                                  if (scrollNotification
+                                                      is ScrollStartNotification) {
+                                                    _onStartScroll(
+                                                        scrollNotification
+                                                            .metrics);
+                                                  } else if (scrollNotification
+                                                      is ScrollUpdateNotification) {
+                                                    _onUpdateScroll(
+                                                        scrollNotification
+                                                            .metrics);
+                                                  } else if (scrollNotification
+                                                      is ScrollEndNotification) {
+                                                    _onEndScroll(
+                                                        scrollNotification
+                                                            .metrics);
+                                                    debugPrint(
+                                                        'end scroll ${scrollNotification.metrics.pixels}');
+                                                    //scrollNotification.context.size = end scroll Size(424.0, 81.6)
+
+                                                  }
+                                                  return false;
+                                                },
+                                                child: ListView.builder(
+                                                    controller:
+                                                        _trackingScrollController,
+                                                    // controller: _controller,
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        PageScrollPhysics(), //stepping through the scroll
+                                                    // physics: ScrollPhysics(),
+
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    itemCount: dbMap.length,
+                                                    itemBuilder:
+                                                        (context, ind) {
+                                                      return catList[index]
+                                                                  .text ==
+                                                              dbMap[ind]['cat']
+                                                          //&& !prefListweather.contains(weatherList.toString())
+                                                          ? Container(
+                                                              // width: MediaQuery.of(
+                                                              //             context)
+                                                              //         .size
+                                                              //         .width *
+                                                              //     0.5,
+                                                              width: (MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width /
+                                                                  1.019),
+
+                                                              ///3,//remove three card will fill
+                                                              child: Card(
+                                                                color: Colors
+                                                                    .blueGrey[30],
+                                                                child: ListTile(
+                                                                  title: Row(
+                                                                    children: <
+                                                                        Widget>[
+                                                                      Container(
+                                                                        // color: Colors
+                                                                        //     .green,
+                                                                        width:
+                                                                            (MediaQuery.of(context).size.width / 1.019) /
+                                                                                3,
+                                                                        child:
+                                                                            Text(
+                                                                          '${dbMap[ind]['name'].toString()} \n${dbMap[ind]['size'].toString()} ${dbMap[ind]['fit'].toString()} \n${dbMap[ind]['desc'].toString()}',
+                                                                          textAlign:
+                                                                              TextAlign.center,
+                                                                        ),
+                                                                      ),
+                                                                      '${dbMap[ind]['pic'].toString()}' != "" ||
+                                                                              '${dbMap[ind]['pic'].toString()}' !=
+                                                                                  null
+                                                                          ? Container(
+                                                                              // color: Colors
+                                                                              //     .green,
+                                                                              width: (MediaQuery.of(context).size.width / 1.019) /
+                                                                                  3,
+                                                                              child: Image
+                                                                                  .file(
+                                                                                new File('${dbMap[ind]['pic'].toString().substring(6).replaceAll("'", "")}'),
+                                                                                height: MediaQuery.of(context).size.height * 0.18,
+                                                                              ))
+                                                                          : Container(
+                                                                              //color: Colors.green,
+                                                                              width: (MediaQuery.of(context).size.width / 1.019) / 3,
+                                                                              child: CircleAvatar(child: Icon(Icons.accessibility))),
+                                                                      Container(
+                                                                          // color: Colors
+                                                                          //     .green,
+                                                                          width: (MediaQuery.of(context).size.width / 1.019) /
+                                                                              4.19,
+                                                                          child:
+                                                                              Icon(Icons.favorite)),
+                                                                    ],
+                                                                  ),
+                                                                ),
                                                               ),
-                                                            ),
-                                                          )
-                                                        : Container();
-                                                  }),
-                                            ),//
+                                                            )
+                                                          : Container();
+                                                    }),
+                                              ), //
                                             ),
                                           ),
                                         ),
