@@ -48,8 +48,8 @@ class _MyHomePageState extends State<MyHomePage> {
   List<String> dbList = List<String>(); //testing
   List<Tab> catTabList = List<Tab>();
   List<Widget> contTabList = List<Widget>();
-  String weatherToday = "weather";
-  String weatherIcon = '01d';
+  String weatherToday = "MyThreads";
+  String weatherIcon = ' ';
   WeatherStation weatherStation =
       new WeatherStation("996cc4f3b136aea607960591dd64e7a5");
 
@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                     ),
                   )
-                : new Card();
+                : new Container();
           },
         ),
       );

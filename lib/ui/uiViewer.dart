@@ -107,32 +107,33 @@ class _ViewerPageState extends State<ViewerPage> {
 //                 ),
 // );
 // }
+
   }
 
-  // _onStartScroll(ScrollMetrics metrics) {
-  //   setState(() {
-  //     //print("Scroll Start $metrics" );
-  //   });
-  // }
+  _onStartScroll(ScrollMetrics metrics) {
+    setState(() {
+      //print("Scroll Start $metrics" );
+    });
+  }
 
-  // _onUpdateScroll(ScrollMetrics metrics) {
-  //   setState(() {
-  //     //print("Scroll update $metrics" );
-  //   });
-  // }
+  _onUpdateScroll(ScrollMetrics metrics) {
+    setState(() {
+      //print("Scroll update $metrics" );
+    });
+  }
 
-  // _onEndScroll(ScrollMetrics metrics) {
-  //   setState(() {
-  //     //print("Scroll end $metrics" );
-  //   });
-  // }
+  _onEndScroll(ScrollMetrics metrics) {
+    setState(() {
+      //print("Scroll end $metrics" );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     // testing
     //_query();
-    
-                     _trackingScrollController.jumpTo((MediaQuery.of(context).size.width/2));
+    //todo offset starting pos
+                      //_trackingScrollController.jumpTo((MediaQuery.of(context).size.width/2));
 
     return FutureBuilder(
         future: _query(),
@@ -206,21 +207,21 @@ class _ViewerPageState extends State<ViewerPage> {
                                             child: Center(
                                               child: 
                                               
-// NotificationListener<ScrollNotification>(
-//               onNotification: (scrollNotification) {
-//                 if (scrollNotification is ScrollStartNotification) {
-//                   _onStartScroll(scrollNotification.metrics);
-//                 } else if (scrollNotification is ScrollUpdateNotification) {
-//                   _onUpdateScroll(scrollNotification.metrics);
-//                 } else if (scrollNotification is ScrollEndNotification) {
-//                   _onEndScroll(scrollNotification.metrics);
-//                  // debugPrint('end scroll ${scrollNotification.metrics.pixels}');
-//                   //scrollNotification.context.size = end scroll Size(424.0, 81.6)
+NotificationListener<ScrollNotification>(
+              onNotification: (scrollNotification) {
+                if (scrollNotification is ScrollStartNotification) {
+                  _onStartScroll(scrollNotification.metrics);
+                } else if (scrollNotification is ScrollUpdateNotification) {
+                  _onUpdateScroll(scrollNotification.metrics);
+                } else if (scrollNotification is ScrollEndNotification) {
+                  _onEndScroll(scrollNotification.metrics);
+                  debugPrint('end scroll ${scrollNotification.metrics.pixels}');
+                  //scrollNotification.context.size = end scroll Size(424.0, 81.6)
                   
-//                 }
-//                 return false;
-//               },
-// child:
+                }
+                return false;
+              },
+child:
                                               ListView.builder(
                                                 controller: _trackingScrollController,
                                                // controller: _controller,
@@ -266,7 +267,7 @@ class _ViewerPageState extends State<ViewerPage> {
                                                           )
                                                         : Container();
                                                   }),
-                                            //),
+                                            ),//
                                             ),
                                           ),
                                         ),
