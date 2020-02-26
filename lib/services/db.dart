@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 
 class DatabaseHelper {
   
-  static final _databaseName = "MyDatabase.db";
+  static final _databaseName = "MyAppDatabase.db";
   static final _databaseVersion = 1;
 
   static final table = 'my_table';//main table
@@ -27,9 +27,11 @@ class DatabaseHelper {
   //fav table
   static final columnIdFav = '_id_fav';
   static final columnFav = 'fav';
+  static final columnFavName = 'fav_name';
   //pack table
   static final columnIdPack = '_id_pack';
   static final columnPack = 'pack';
+  static final columnPackName = 'pack_name';
 
   // make this a singleton class
   DatabaseHelper._privateConstructor();
@@ -66,19 +68,26 @@ class DatabaseHelper {
             $columnRating TEXT,
             $columnDesc TEXT,
             $columnPic TEXT
-          );
-          CEATE TABLE $tableFav (
-            $columnId INTEGER FOREIGN KEY REFERENCES $table($columnId INTEGER),
+          );''');
+
+          await db.execute('''
+CREATE TABLE $tableFav (
+            $columnId INTEGER NOT NULL,
             $columnIdFav INTEGER PRIMARY KEY,
-            $columnFav TEXT NOT NULL
-          )
-          CEATE TABLE $tablePack (
-            $columnId INTEGER FOREIGN KEY REFERENCES $table($columnId INTEGER),
+            $columnFavName TEXT NOT NULL,
+            $columnFav TEXT NOT NULL,
+            FOREIGN KEY ($columnId) REFERENCES $table($columnId)
+          );''');
+          await db.execute('''
+CREATE TABLE $tablePack (
+            $columnId INTEGER NOT NULL,
             $columnIdPack INTEGER PRIMARY KEY,
-            $columnPack TEXT NOT NULL
-          )
-          ''');
+            $columnPackName TEXT NOT NULL,
+            $columnPack TEXT NOT NULL,
+            FOREIGN KEY ($columnId) REFERENCES $table($columnId)
+          );''');
   }
+  
   
   // Helper methods
 
@@ -144,12 +153,12 @@ class DatabaseHelper {
   Future<int> updateFav(Map<String, dynamic> row) async {
     Database db = await instance.database;
     int id = row[columnIdFav];
-    return await db.update(table, row, where: '$columnIdFav = ?', whereArgs: [id]);
+    return await db.update(tableFav, row, where: '$columnIdFav = ?', whereArgs: [id]);
   }
   Future<int> updatePack(Map<String, dynamic> row) async {
     Database db = await instance.database;
     int id = row[columnIdPack];
-    return await db.update(table, row, where: '$columnIdPack = ?', whereArgs: [id]);
+    return await db.update(tablePack, row, where: '$columnIdPack = ?', whereArgs: [id]);
   }
 
   // Deletes the row specified by the id. The number of affected rows is 
@@ -160,10 +169,22 @@ class DatabaseHelper {
   }
   Future<int> deleteFav(int id) async {
     Database db = await instance.database;
-    return await db.delete(table, where: '$columnIdFav = ?', whereArgs: [id]);
+    return await db.delete(tableFav, where: '$columnIdFav = ?', whereArgs: [id]);
   }
   Future<int> deletePack(int id) async {
     Database db = await instance.database;
-    return await db.delete(table, where: '$columnIdPack = ?', whereArgs: [id]);
+    return await db.delete(tablePack, where: '$columnIdPack = ?', whereArgs: [id]);
+  }
+  Future deleteAllTable() async{
+    Database db = await instance.database;
+    return await db.rawQuery('DROP TABLE IF EXISTS $table;');
+  }
+  Future deleteAllTableFav() async{
+    Database db = await instance.database;
+    return await db.rawQuery('DROP TABLE IF EXISTS $tableFav;');
+  }
+  Future deleteAllTablePack() async{
+    Database db = await instance.database;
+    return await db.rawQuery('DROP TABLE IF EXISTS $tablePack;');
   }
 }

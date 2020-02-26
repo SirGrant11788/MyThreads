@@ -49,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Tab> catTabList = List<Tab>();
   List<Widget> contTabList = List<Widget>();
   String weatherToday = "MyThreads";
-  String weatherIcon = ' ';
+  String weatherIcon = '';
   WeatherStation weatherStation =
       new WeatherStation("996cc4f3b136aea607960591dd64e7a5");
 
@@ -125,7 +125,7 @@ return FutureBuilder(
         appBar: AppBar(
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children:weatherIcon==''?[Text("")] : [
               Image.network(
                 'http://openweathermap.org/img/wn/$weatherIcon@2x.png',
                 fit: BoxFit.contain,
@@ -142,15 +142,21 @@ return FutureBuilder(
             ],
           ),
           leading: PopupMenuButton<String>(
+            onSelected: (value) => 
+            value=='Settings'? _delTables():null,//TODO settings page
+          
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               const PopupMenuItem<String>(
                 child: Text('Shop'),
+                value: 'Shop',
               ),
               const PopupMenuItem<String>(
                 child: Text('Backup'),
+                value: 'Backup',
               ),
               const PopupMenuItem<String>(
                 child: Text('Settings'),
+                value: 'Settings',
               ),
               const PopupMenuItem<String>(
                 child: Text('Info'),
@@ -252,9 +258,16 @@ new Container(
           child: const Icon(Icons.accessibility_new),
           mini: true,
           onPressed: () {
+            if(dbMap !=null){
             Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => ViewerPage()));
+            }else{
+              Fluttertoast.showToast(
+                    msg: 'Add Items First',
+                    toastLength: Toast.LENGTH_LONG,
+                  );
+            }
           },
         ),
         bottomNavigationBar: BottomAppBar(
@@ -297,12 +310,18 @@ new Container(
     );
       });
   }
+_delTables() async{
+  print('_delTables executed');
+  await db.deleteAllTablePack();
+   await db.deleteAllTableFav();
+   await db.deleteAllTable();
 
+}
 
   _query() async {
     final allRows = await db.queryAllRows();
-    //print('query all rows:');
-    //allRows.forEach((row) => print(row));
+    print('query all rows:');
+    allRows.forEach((row) => print('print all rows\n $row'));
     //dbList.clear();
     //dbMap.clear();
     //  allRows.forEach((row) => dbMap.putIfAbsent(row['_id'].toString(), row['name']));

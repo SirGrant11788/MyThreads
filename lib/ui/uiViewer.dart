@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:mythreads/ui/uiAppHome.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mythreads/services/db.dart';
@@ -15,25 +14,26 @@ class _ViewerPageState extends State<ViewerPage> {
   final db = DatabaseHelper.instance;
 
 // final itemSize = 1.0;//testing Todo
-  ScrollController _controller = ScrollController();
-  TrackingScrollController _trackingScrollController =
-      TrackingScrollController();
+  // ScrollController _controller = ScrollController();
+  // TrackingScrollController _trackingScrollController =
+  //     TrackingScrollController();
 
-  @override
-  void initState() {
-    _controller = ScrollController();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   _controller = ScrollController();
+  //   super.initState();
+  // }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _controller.dispose();
+  //   super.dispose();
+  // }
 
   // int chipPrefWeather = 0;
   // int chipPrefCat = 0;
   var dbMap;
+  var dbMapFav;
   List<Widget> catListWidget = List<Widget>(); //
   //List<Widget> weatherListWidget = List<Widget>(); //
   //List<ChoiceChip> chipWeather = List<ChoiceChip>();
@@ -46,9 +46,10 @@ class _ViewerPageState extends State<ViewerPage> {
   _query() async {
     print('_query called');
     final allRows = await db.queryAllRows();
+    final allRowsFav = await db.queryAllRowsFav();
     //print('Viewer allrows ${allRows}');
     dbMap = allRows;
-
+    dbMapFav = allRowsFav;
     //finds the catagories and adds to catList
     catList.clear();
     allRows.forEach((row) {
@@ -110,23 +111,23 @@ class _ViewerPageState extends State<ViewerPage> {
 // }
   }
 
-  _onStartScroll(ScrollMetrics metrics) {
-    setState(() {
-      //print("Scroll Start $metrics" );
-    });
-  }
+  // _onStartScroll(ScrollMetrics metrics) {
+  //   setState(() {
+  //     //print("Scroll Start $metrics" );
+  //   });
+  // }
 
-  _onUpdateScroll(ScrollMetrics metrics) {
-    setState(() {
-      //print("Scroll update $metrics" );
-    });
-  }
+  // _onUpdateScroll(ScrollMetrics metrics) {
+  //   setState(() {
+  //     //print("Scroll update $metrics" );
+  //   });
+  // }
 
-  _onEndScroll(ScrollMetrics metrics) {
-    setState(() {
-      //print("Scroll end $metrics" );
-    });
-  }
+  // _onEndScroll(ScrollMetrics metrics) {
+  //   setState(() {
+  //     //print("Scroll end $metrics" );
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -204,35 +205,35 @@ class _ViewerPageState extends State<ViewerPage> {
                                                     .height *
                                                 0.2, //size of
                                             child: Center(
-                                              child: NotificationListener<
-                                                  ScrollNotification>(
-                                                onNotification:
-                                                    (scrollNotification) {
-                                                  if (scrollNotification
-                                                      is ScrollStartNotification) {
-                                                    _onStartScroll(
-                                                        scrollNotification
-                                                            .metrics);
-                                                  } else if (scrollNotification
-                                                      is ScrollUpdateNotification) {
-                                                    _onUpdateScroll(
-                                                        scrollNotification
-                                                            .metrics);
-                                                  } else if (scrollNotification
-                                                      is ScrollEndNotification) {
-                                                    _onEndScroll(
-                                                        scrollNotification
-                                                            .metrics);
-                                                    debugPrint(
-                                                        'end scroll ${scrollNotification.metrics.pixels}');
-                                                    //scrollNotification.context.size = end scroll Size(424.0, 81.6)
+                                              // child: NotificationListener<
+                                              //     ScrollNotification>(
+                                              //   onNotification:
+                                              //       (scrollNotification) {
+                                              //     if (scrollNotification
+                                              //         is ScrollStartNotification) {
+                                              //       _onStartScroll(
+                                              //           scrollNotification
+                                              //               .metrics);
+                                              //     } else if (scrollNotification
+                                              //         is ScrollUpdateNotification) {
+                                              //       _onUpdateScroll(
+                                              //           scrollNotification
+                                              //               .metrics);
+                                              //     } else if (scrollNotification
+                                              //         is ScrollEndNotification) {
+                                              //       _onEndScroll(
+                                              //           scrollNotification
+                                              //               .metrics);
+                                              //       debugPrint(
+                                              //           'end scroll ${scrollNotification.metrics.pixels}');
+                                              //       //scrollNotification.context.size = end scroll Size(424.0, 81.6)
 
-                                                  }
-                                                  return false;
-                                                },
+                                              //     }
+                                              //     return false;
+                                              //   },
                                                 child: ListView.builder(
-                                                    controller:
-                                                        _trackingScrollController,
+                                                    // controller:
+                                                    //     _trackingScrollController,
                                                     // controller: _controller,
                                                     shrinkWrap: true,
                                                     physics:
@@ -303,8 +304,25 @@ class _ViewerPageState extends State<ViewerPage> {
                                                                           //     .green,
                                                                           width: (MediaQuery.of(context).size.width / 1.019) /
                                                                               4.19,
-                                                                          child:
-                                                                              Icon(Icons.favorite)),
+                                                                          child://TODO Fav selection
+                                                                          Column(children: <Widget>[
+                                                                            Icon(Icons.favorite),
+                                                                            Container(
+                                                                              color: Colors.green,
+                                                                              child: ListView.builder(
+                                                                                itemCount: dbMapFav.length,
+                                                                                itemBuilder: (BuildContext context, int i) {
+                                                                                return dbMapFav[i]['fav_name'].toString()==dbMap[ind]['name'].toString()?
+                                                                                ListTile(
+                                                                                  title: Text('${dbMapFav[i]['fav'].toString()}'),
+                                                                                ):Container();
+                                                                               },
+                                                                              ),
+                                                                            ),
+
+                                                                          ],),
+                                                                              
+                                                                              ),
                                                                     ],
                                                                   ),
                                                                 ),
@@ -315,7 +333,7 @@ class _ViewerPageState extends State<ViewerPage> {
                                               ), //
                                             ),
                                           ),
-                                        ),
+                                     //   ),
                                       )
                                     : Container();
                               }),
