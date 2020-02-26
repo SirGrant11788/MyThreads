@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 
 class DatabaseHelper {
   
-  static final _databaseName = "MyAppDatabase.db";
+  static final _databaseName = "MyDatabase.db";
   static final _databaseVersion = 1;
 
   static final table = 'my_table';//main table
@@ -58,7 +58,7 @@ class DatabaseHelper {
   // SQL code to create the database table todo check auto NOT NULL AUTO_INCREMENT 
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-          CREATE TABLE $table (
+          CREATE TABLE IF NOT EXISTS $table (
             $columnId INTEGER PRIMARY KEY,
             $columnName TEXT NOT NULL,
             $columnCat TEXT NOT NULL,
@@ -71,7 +71,7 @@ class DatabaseHelper {
           );''');
 
           await db.execute('''
-CREATE TABLE $tableFav (
+CREATE TABLE IF NOT EXISTS $tableFav (
             $columnId INTEGER NOT NULL,
             $columnIdFav INTEGER PRIMARY KEY,
             $columnFavName TEXT NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE $tableFav (
             FOREIGN KEY ($columnId) REFERENCES $table($columnId)
           );''');
           await db.execute('''
-CREATE TABLE $tablePack (
+CREATE TABLE IF NOT EXISTS $tablePack (
             $columnId INTEGER NOT NULL,
             $columnIdPack INTEGER PRIMARY KEY,
             $columnPackName TEXT NOT NULL,

@@ -269,7 +269,7 @@ class _ViewerPageState extends State<ViewerPage> {
                                                                   title: Row(
                                                                     children: <
                                                                         Widget>[
-                                                                      Container(
+                                                                      Container(//info of item
                                                                         // color: Colors
                                                                         //     .green,
                                                                         width:
@@ -285,7 +285,7 @@ class _ViewerPageState extends State<ViewerPage> {
                                                                       '${dbMap[ind]['pic'].toString()}' != "" ||
                                                                               '${dbMap[ind]['pic'].toString()}' !=
                                                                                   null
-                                                                          ? Container(
+                                                                          ? Container(//pic of item
                                                                               // color: Colors
                                                                               //     .green,
                                                                               width: (MediaQuery.of(context).size.width / 1.019) /
@@ -299,16 +299,22 @@ class _ViewerPageState extends State<ViewerPage> {
                                                                               //color: Colors.green,
                                                                               width: (MediaQuery.of(context).size.width / 1.019) / 3,
                                                                               child: CircleAvatar(child: Icon(Icons.accessibility))),
-                                                                      Container(
-                                                                          // color: Colors
-                                                                          //     .green,
+                                                                      
+                                                                      Container(//fav item
+                                                                          color: Colors
+                                                                              .green,
                                                                           width: (MediaQuery.of(context).size.width / 1.019) /
                                                                               4.19,
                                                                           child://TODO Fav selection
                                                                           Column(children: <Widget>[
+                                                                            
                                                                             Icon(Icons.favorite),
                                                                             Container(
-                                                                              color: Colors.green,
+                                                                              color: Colors.red,
+                                                                              width: (MediaQuery.of(context).size.width / 1.019) /
+                                                                              3,
+                                                                              height: (MediaQuery.of(context).size.width / 1.019) /
+                                                                              3.3,
                                                                               child: ListView.builder(
                                                                                 itemCount: dbMapFav.length,
                                                                                 itemBuilder: (BuildContext context, int i) {

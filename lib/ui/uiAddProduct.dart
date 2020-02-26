@@ -307,11 +307,19 @@ Fluttertoast.showToast(
   }
 
 _query() async {
-  print('_query called catList: ${catList.length}');
+  //print('_query add item method called');
+  //print('_query called catList: ${catList.length} ');//${catList[1].value}
+  
+List<String> tempCatList=List();
+List<String> tempSizeList=List();
+List<String> tempFitList=List();
+List<String> tempWeatherList=List();
+
   if(catList.length==0){
-    print('_query called and fetching');
+
+    //print('_query called and fetching');
 final allRows = await db.queryAllRows();
-print('ADD PRODUCT allrows $allRows');
+//print('ADD PRODUCT allrows $allRows');
 //add to lists for menu options
 
 // sizeList.clear();
@@ -321,7 +329,11 @@ print('ADD PRODUCT allrows $allRows');
 
 //find all catagories in db
 allRows.forEach((row) {
-      if (!catList.toString().contains('${row['cat']}')) {
+  for(int i = 0;i<catList.length;i++){
+  tempCatList.add('${catList[i].value}');
+}
+      if (!tempCatList.toString().contains('${row['cat']}')) {
+      // if (!catList.toString().contains('${row['cat']}')) {
         //catList.add('${row['cat']}');
         catList.add(
           DropdownMenuItem<String>(
@@ -335,7 +347,11 @@ catList.add(
           child: Text('Add New Category')));
 //find all sizes in db
 allRows.forEach((row) {
-      if (!sizeList.toString().contains('${row['size']}')) {
+  for(int i = 0;i<sizeList.length;i++){
+  tempSizeList.add('${sizeList[i].value}');
+}
+      if (!tempSizeList.toString().contains('${row['size']}')) {
+      // if (!sizeList.toString().contains('${row['size']}')) {
         //sizeList.add('${row['size']}');
         sizeList.add(
           DropdownMenuItem<String>(
@@ -349,7 +365,11 @@ sizeList.add(
           child: Text('Add New Size')));
 //find all weather in db
 allRows.forEach((row) {
-      if (!weatherList.toString().contains('${row['weather']}')) {
+  for(int i = 0;i<weatherList.length;i++){
+  tempWeatherList.add('${weatherList[i].value}');
+}
+      if (!tempWeatherList.toString().contains('${row['weather']}')) {
+      // if (!weatherList.toString().contains('${row['weather']}')) {
         //weatherList.add('${row['weather']}');
         weatherList.add(
           DropdownMenuItem<String>(
@@ -363,7 +383,11 @@ weatherList.add(
           child: Text('Add New Weather')));
 //find all fit in db
 allRows.forEach((row) {
-      if (!fitList.toString().contains('${row['fit']}')) {
+  for(int i = 0;i<fitList.length;i++){
+  tempFitList.add('${fitList[i].value}');
+}
+      if (!tempFitList.toString().contains('${row['fit']}')) {
+      // if (!fitList.toString().contains('${row['fit']}')) {
         //fitList.add('${row['fit']}');
         fitList.add(
           DropdownMenuItem<String>(

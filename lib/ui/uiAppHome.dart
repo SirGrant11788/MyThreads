@@ -320,8 +320,8 @@ _delTables() async{
 
   _query() async {
     final allRows = await db.queryAllRows();
-    print('query all rows:');
-    allRows.forEach((row) => print('print all rows\n $row'));
+    //print('query all rows:');
+    //allRows.forEach((row) => print('print all rows\n $row'));
     //dbList.clear();
     //dbMap.clear();
     //  allRows.forEach((row) => dbMap.putIfAbsent(row['_id'].toString(), row['name']));
