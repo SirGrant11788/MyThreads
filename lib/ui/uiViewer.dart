@@ -12,165 +12,32 @@ class ViewerPage extends StatefulWidget {
 
 class _ViewerPageState extends State<ViewerPage> {
   final db = DatabaseHelper.instance;
-
-// final itemSize = 1.0;//testing Todo
-  // ScrollController _controller = ScrollController();
-  // TrackingScrollController _trackingScrollController =
-  //     TrackingScrollController();
-
-  // @override
-  // void initState() {
-  //   _controller = ScrollController();
-  //   super.initState();
-  // }
-
-  // @override
-  // void dispose() {
-  //   _controller.dispose();
-  //   super.dispose();
-  // }
-
-  // int chipPrefWeather = 0;
-  // int chipPrefCat = 0;
+  TextEditingController _textFieldControllerDialog = TextEditingController();
+  List<DropdownMenuItem<String>> favList = List();
+  String _btnSelectedValFav = null;
   var dbMap;
   var dbMapFav;
-  List<Widget> catListWidget = List<Widget>(); //
-  //List<Widget> weatherListWidget = List<Widget>(); //
-  //List<ChoiceChip> chipWeather = List<ChoiceChip>();
+  List<Widget> catListWidget = List<Widget>();
   List<ChoiceChip> chipCat = List<ChoiceChip>();
   List catList = List();
-  //List weatherList = List();
   List<String> prefListCat = List(); //what not to display
-  //List<String> prefListweather = List();//what not to display
-
-  _query() async {
-    print('_query called');
-    final allRows = await db.queryAllRows();
-    final allRowsFav = await db.queryAllRowsFav();
-    //print('Viewer allrows ${allRows}');
-    dbMap = allRows;
-    dbMapFav = allRowsFav;
-    //finds the catagories and adds to catList
-    catList.clear();
-    allRows.forEach((row) {
-      if (!catList.toString().contains('${row['cat']}')) {
-        catList.add(Tab(text: '${row['cat']}'));
-      }
-    });
-
-    //   //finds the weathers and adds to weatherList
-    //   weatherList.clear();
-    //   allRows.forEach((row) {
-    //     if (!weatherList.toString().contains('${row['weather']}')) {
-    //       weatherList.add(Tab(text: '${row['weather']}'));
-    //     }
-
-    // });
-    // chipWeather.clear();
-    chipCat.clear();
-
-    //create choice chips
-
-    for (int i = 0; i < catList.length; i++) {
-      chipCat.add(
-        ChoiceChip(
-          label: Text('${catList[i].text}'),
-          selected: prefListCat.contains('${catList[i].text}') == false,
-          onSelected: (value) {
-            setState(() {
-              //chipPrefCat = i+1;
-              if (prefListCat.contains('${catList[i].text}') == true) {
-                prefListCat.remove('${catList[i].text}');
-                //print('if Remove $prefListCat');
-              } else {
-                prefListCat.add('${catList[i].text}');
-                //print('else add $prefListCat');
-              }
-              //print(prefListCat);
-            });
-          },
-        ),
-      );
-    }
-// for(int i=0;i<weatherList.length;i++){
-// chipWeather.add(
-//   ChoiceChip(
-//                   label: Text('${weatherList[i].text}'),
-//                   selected: prefListweather.contains('${weatherList[i].text}')==false,
-//                   onSelected: (value) {
-//                     setState(() {
-//                       if(prefListweather.contains('${weatherList[i].text}')==true){
-// prefListweather.remove('${weatherList[i].text}');
-//                       }else{
-// prefListweather.add('${weatherList[i].text}');
-//                       }
-//                     });
-//                   },
-//                 ),
-// );
-// }
-  }
-
-  // _onStartScroll(ScrollMetrics metrics) {
-  //   setState(() {
-  //     //print("Scroll Start $metrics" );
-  //   });
-  // }
-
-  // _onUpdateScroll(ScrollMetrics metrics) {
-  //   setState(() {
-  //     //print("Scroll update $metrics" );
-  //   });
-  // }
-
-  // _onEndScroll(ScrollMetrics metrics) {
-  //   setState(() {
-  //     //print("Scroll end $metrics" );
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
-    // testing
-    //_query();
-    //todo offset starting pos
-    //_trackingScrollController.jumpTo((MediaQuery.of(context).size.width/2));
-
     return FutureBuilder(
         future: _query(),
         builder: (context, snapshot) {
           return Scaffold(
             appBar: AppBar(
-              //leading: Icon(Icons.accessibility_new),
               title: Text('weather TODO'),
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.favorite),
-                  onPressed: () {
-                    Fluttertoast.showToast(
-                      msg: 'Fav pressed',
-                      toastLength: Toast.LENGTH_LONG,
-                    );
-                  },
-                ),
-              ],
             ),
             body: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  // ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.max,
                       children: chipCat),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   mainAxisSize: MainAxisSize.max,
-                  //   children:
-                  //      chipWeather
-                  // ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
@@ -179,9 +46,7 @@ class _ViewerPageState extends State<ViewerPage> {
                         child: new Container(
                           width: MediaQuery.of(context).size.height * 0.5294,
                           color: Colors.blueGrey[50],
-                          // height: MediaQuery.of(context).size.height * 0.765,//with second chip row
-                          height: MediaQuery.of(context).size.height *
-                              0.8425, //without second chip row
+                          height: MediaQuery.of(context).size.height * 0.8425,
                           child: ListView.builder(
                               scrollDirection: Axis.vertical,
                               itemCount: catList.length,
@@ -193,7 +58,6 @@ class _ViewerPageState extends State<ViewerPage> {
                                             MediaQuery.of(context).size.width *
                                                 0.6,
                                         child: Card(
-                                          //color: Colors.red,
                                           child: Container(
                                             width: MediaQuery.of(context)
                                                     .size
@@ -203,143 +67,184 @@ class _ViewerPageState extends State<ViewerPage> {
                                             height: MediaQuery.of(context)
                                                     .size
                                                     .height *
-                                                0.2, //size of
+                                                0.2,
                                             child: Center(
-                                              // child: NotificationListener<
-                                              //     ScrollNotification>(
-                                              //   onNotification:
-                                              //       (scrollNotification) {
-                                              //     if (scrollNotification
-                                              //         is ScrollStartNotification) {
-                                              //       _onStartScroll(
-                                              //           scrollNotification
-                                              //               .metrics);
-                                              //     } else if (scrollNotification
-                                              //         is ScrollUpdateNotification) {
-                                              //       _onUpdateScroll(
-                                              //           scrollNotification
-                                              //               .metrics);
-                                              //     } else if (scrollNotification
-                                              //         is ScrollEndNotification) {
-                                              //       _onEndScroll(
-                                              //           scrollNotification
-                                              //               .metrics);
-                                              //       debugPrint(
-                                              //           'end scroll ${scrollNotification.metrics.pixels}');
-                                              //       //scrollNotification.context.size = end scroll Size(424.0, 81.6)
-
-                                              //     }
-                                              //     return false;
-                                              //   },
-                                                child: ListView.builder(
-                                                    // controller:
-                                                    //     _trackingScrollController,
-                                                    // controller: _controller,
-                                                    shrinkWrap: true,
-                                                    physics:
-                                                        PageScrollPhysics(), //stepping through the scroll
-                                                    // physics: ScrollPhysics(),
-
-                                                    scrollDirection:
-                                                        Axis.horizontal,
-                                                    itemCount: dbMap.length,
-                                                    itemBuilder:
-                                                        (context, ind) {
-                                                      return catList[index]
-                                                                  .text ==
-                                                              dbMap[ind]['cat']
-                                                          //&& !prefListweather.contains(weatherList.toString())
-                                                          ? Container(
-                                                              // width: MediaQuery.of(
-                                                              //             context)
-                                                              //         .size
-                                                              //         .width *
-                                                              //     0.5,
-                                                              width: (MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width /
-                                                                  1.019),
-
-                                                              ///3,//remove three card will fill
-                                                              child: Card(
-                                                                color: Colors
-                                                                    .blueGrey[30],
-                                                                child: ListTile(
-                                                                  title: Row(
-                                                                    children: <
-                                                                        Widget>[
-                                                                      Container(//info of item
-                                                                        // color: Colors
-                                                                        //     .green,
-                                                                        width:
-                                                                            (MediaQuery.of(context).size.width / 1.019) /
-                                                                                3,
-                                                                        child:
-                                                                            Text(
-                                                                          '${dbMap[ind]['name'].toString()} \n${dbMap[ind]['size'].toString()} ${dbMap[ind]['fit'].toString()} \n${dbMap[ind]['desc'].toString()}',
-                                                                          textAlign:
-                                                                              TextAlign.center,
-                                                                        ),
-                                                                      ),
-                                                                      '${dbMap[ind]['pic'].toString()}' != "" ||
-                                                                              '${dbMap[ind]['pic'].toString()}' !=
-                                                                                  null
-                                                                          ? Container(//pic of item
-                                                                              // color: Colors
-                                                                              //     .green,
-                                                                              width: (MediaQuery.of(context).size.width / 1.019) /
-                                                                                  3,
-                                                                              child: Image
-                                                                                  .file(
-                                                                                new File('${dbMap[ind]['pic'].toString().substring(6).replaceAll("'", "")}'),
-                                                                                height: MediaQuery.of(context).size.height * 0.18,
-                                                                              ))
-                                                                          : Container(
-                                                                              //color: Colors.green,
-                                                                              width: (MediaQuery.of(context).size.width / 1.019) / 3,
-                                                                              child: CircleAvatar(child: Icon(Icons.accessibility))),
-                                                                      
-                                                                      Container(//fav item
-                                                                          color: Colors
-                                                                              .green,
-                                                                          width: (MediaQuery.of(context).size.width / 1.019) /
-                                                                              4.19,
-                                                                          child://TODO Fav selection
-                                                                          Column(children: <Widget>[
-                                                                            
-                                                                            Icon(Icons.favorite),
-                                                                            Container(
-                                                                              color: Colors.red,
-                                                                              width: (MediaQuery.of(context).size.width / 1.019) /
+                                              child: ListView.builder(
+                                                  shrinkWrap: true,
+                                                  physics:
+                                                      PageScrollPhysics(), //stepping through the scroll
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  itemCount: dbMap.length,
+                                                  itemBuilder: (context, ind) {
+                                                    return catList[index]
+                                                                .text ==
+                                                            dbMap[ind]['cat']
+                                                        ? Container(
+                                                            width: (MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width /
+                                                                1.019),
+                                                            child: Card(
+                                                              color: Colors
+                                                                  .blue[50],
+                                                              child: ListTile(
+                                                                title: Row(
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Container(
+                                                                      //info of item
+                                                                      width:
+                                                                          (MediaQuery.of(context).size.width / 1.019) /
                                                                               3,
-                                                                              height: (MediaQuery.of(context).size.width / 1.019) /
-                                                                              3.3,
-                                                                              child: ListView.builder(
-                                                                                itemCount: dbMapFav.length,
-                                                                                itemBuilder: (BuildContext context, int i) {
-                                                                                return dbMapFav[i]['fav_name'].toString()==dbMap[ind]['name'].toString()?
-                                                                                ListTile(
-                                                                                  title: Text('${dbMapFav[i]['fav'].toString()}'),
-                                                                                ):Container();
-                                                                               },
-                                                                              ),
+                                                                      child:
+                                                                          RichText(
+                                                                        text: TextSpan(
+                                                                            style: TextStyle(
+                                                                              fontSize: 14.0,
+                                                                              color: Colors.black,
                                                                             ),
-
-                                                                          ],),
-                                                                              
+                                                                            children: <TextSpan>[
+                                                                              new TextSpan(
+                                                                                text: '${dbMap[ind]['name'].toString()}\n',
+                                                                                style: new TextStyle(
+                                                                                  fontSize: 14.0,
+                                                                                ),
                                                                               ),
-                                                                    ],
-                                                                  ),
+                                                                              new TextSpan(text: '${dbMap[ind]['size'].toString()} ${dbMap[ind]['fit'].toString()}\n', style: new TextStyle(fontSize: 12.0, color: Colors.black87)),
+                                                                              new TextSpan(text: '${dbMap[ind]['desc'].toString()}', style: new TextStyle(fontSize: 11.0, color: Colors.black54)),
+                                                                            ]),
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        softWrap:
+                                                                            true,
+                                                                      ),
+                                                                    ),
+                                                                    '${dbMap[ind]['pic'].toString()}' !=
+                                                                                "" ||
+                                                                            '${dbMap[ind]['pic'].toString()}' !=
+                                                                                null
+                                                                        ? Container(
+                                                                            width: (MediaQuery.of(context).size.width / 1.019) /
+                                                                                3,
+                                                                            child: Image
+                                                                                .file(
+                                                                              new File('${dbMap[ind]['pic'].toString().substring(6).replaceAll("'", "")}'),
+                                                                              height: MediaQuery.of(context).size.height * 0.18,
+                                                                            ))
+                                                                        : Container(
+                                                                            width: (MediaQuery.of(context).size.width / 1.019) /
+                                                                                3,
+                                                                            child:
+                                                                                CircleAvatar(child: Icon(Icons.accessibility))),
+                                                                    Container(
+                                                                      width: (MediaQuery.of(context).size.width /
+                                                                              1.019) /
+                                                                          4.19,
+                                                                      child:
+                                                                          Column(
+                                                                        children: <
+                                                                            Widget>[
+                                                                          Container(
+                                                                            width:
+                                                                                (MediaQuery.of(context).size.width / 1.019) / 3,
+                                                                            height:
+                                                                                (MediaQuery.of(context).size.width / 1.019) / 15,
+                                                                            child:
+                                                                                DropdownButton(
+                                                                              icon: Icon(Icons.favorite),
+                                                                              iconSize: 12,
+                                                                              elevation: 16,
+                                                                              isExpanded: false,
+                                                                              style: TextStyle(fontSize: 10, color: Colors.black),
+                                                                              value: _btnSelectedValFav,
+                                                                              hint: Text(
+                                                                                'Fav',
+                                                                                style: TextStyle(fontSize: 10),
+                                                                              ),
+                                                                              onChanged: ((String newValue) {
+                                                                                if (newValue == 'Add New Fav') {
+                                                                                  _showDialog(context, 'Fav', 'e.g. Formal Dinner').then((val) {
+                                                                                    favList.add(DropdownMenuItem<String>(value: '$val', child: Text('$val')));
+                                                                                  });
+                                                                                } else {
+                                                                                  setState(() {
+                                                                                    _btnSelectedValFav = newValue;
+                                                                                  });
+                                                                                }
+                                                                              }),
+                                                                              items: favList,
+                                                                            ),
+                                                                          ),
+                                                                          _btnSelectedValFav != null
+                                                                              ? Container(
+                                                                                  height: (MediaQuery.of(context).size.width / 28) / 1,
+                                                                                  width: (MediaQuery.of(context).size.width / 1.019) / 4.19,
+                                                                                  child: RaisedButton(
+                                                                                    color: Colors.blue[200],
+                                                                                    child: Text(
+                                                                                      'SAVE',
+                                                                                      style: TextStyle(fontSize: 8),
+                                                                                    ),
+                                                                                    onPressed: () {
+                                                                                      _insert('$ind', '${dbMap[ind]['name'].toString()}', _btnSelectedValFav);
+                                                                                    },
+                                                                                  ))
+                                                                              : Container(
+                                                                                  height: (MediaQuery.of(context).size.width / 28) / 1,
+                                                                                  width: (MediaQuery.of(context).size.width / 1.019) / 4.19,
+                                                                                ),
+                                                                          Container(
+                                                                            width:
+                                                                                (MediaQuery.of(context).size.width / 1.019) / 3,
+                                                                            height:
+                                                                                (MediaQuery.of(context).size.width / 1.019) / 3.9,
+                                                                            child:
+                                                                                ListView.builder(
+                                                                              shrinkWrap: true,
+                                                                              itemCount: dbMapFav.length,
+                                                                              itemBuilder: (BuildContext context, int i) {
+                                                                                return dbMapFav[i]['fav_name'].toString() == dbMap[ind]['name'].toString()
+                                                                                    ? Dismissible(
+                                                                                        key: UniqueKey(),
+                                                                                        onDismissed: (DismissDirection dir) {
+                                                                                          _delFav(dbMapFav[i]['_id_fav']);
+                                                                                        },
+                                                                                        background: Container(
+                                                                                          color: Colors.red,
+                                                                                          child: Icon(Icons.delete),
+                                                                                          alignment: Alignment.centerLeft,
+                                                                                        ),
+                                                                                        secondaryBackground: Container(
+                                                                                          color: Colors.red,
+                                                                                          child: Icon(Icons.delete),
+                                                                                          alignment: Alignment.centerRight,
+                                                                                        ),
+                                                                                        child: ListTile(
+                                                                                          title: Text(
+                                                                                            '${dbMapFav[i]['fav'].toString()}',
+                                                                                            style: TextStyle(fontSize: 10, color: Colors.black),
+                                                                                          ),
+                                                                                        ),
+                                                                                      )
+                                                                                    : Container();
+                                                                              },
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
                                                                 ),
                                                               ),
-                                                            )
-                                                          : Container();
-                                                    }),
-                                              ), //
+                                                            ),
+                                                          )
+                                                        : Container();
+                                                  }),
                                             ),
                                           ),
-                                     //   ),
+                                        ),
                                       )
                                     : Container();
                               }),
@@ -352,5 +257,104 @@ class _ViewerPageState extends State<ViewerPage> {
             ),
           );
         });
+  }
+
+  _delFav(favId) async {
+    await db.deleteFav(favId);
+    setState(() {});
+  }
+
+  _query() async {
+    final allRows = await db.queryAllRows();
+    final allRowsFav = await db.queryAllRowsFav();
+    dbMap = allRows;
+    dbMapFav = allRowsFav;
+    //finds the catagories and adds to catList
+    catList.clear();
+    allRows.forEach((row) {
+      if (!catList.toString().contains('${row['cat']}')) {
+        catList.add(Tab(text: '${row['cat']}'));
+      }
+    });
+    chipCat.clear();
+    //create choice chips
+    for (int i = 0; i < catList.length; i++) {
+      chipCat.add(
+        ChoiceChip(
+          label: Text('${catList[i].text}'),
+          selected: prefListCat.contains('${catList[i].text}') == false,
+          onSelected: (value) {
+            setState(() {
+              if (prefListCat.contains('${catList[i].text}') == true) {
+                prefListCat.remove('${catList[i].text}');
+              } else {
+                prefListCat.add('${catList[i].text}');
+              }
+            });
+          },
+        ),
+      );
+    }
+
+    List<String> tempFavList = List();
+    if (favList.length == 0) {
+      allRowsFav.forEach((row) {
+        allRowsFav.forEach((row) {
+          if (!tempFavList.toString().contains('${row['fav']}')) {
+            tempFavList.add('${row['fav']}');
+            favList.add(DropdownMenuItem<String>(
+                value: '${row['fav']}',
+                child: Text('${row['fav']}',
+                    style: TextStyle(fontSize: 10, color: Colors.black))));
+          }
+        });
+      });
+      favList.add(DropdownMenuItem<String>(
+          value: 'Add New Fav',
+          child: Text(
+            'Add New Fav',
+            style: TextStyle(fontSize: 10, color: Colors.black),
+          )));
+    }
+  }
+
+  _showDialog(BuildContext context, String title, String hint) {
+    _textFieldControllerDialog.text = '';
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('$title'),
+            content: TextField(
+              controller: _textFieldControllerDialog,
+              decoration: InputDecoration(hintText: "$hint"),
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('SAVE'),
+                onPressed: () {
+                  Navigator.pop(context, _textFieldControllerDialog.text);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void _insert(itemID, itemName, fav) async {
+    // row to insert
+    Map<String, dynamic> row = {
+      DatabaseHelper.columnId: '$itemID',
+      DatabaseHelper.columnFavName: '$itemName',
+      DatabaseHelper.columnFav: '$fav',
+    };
+    final id = await db.insertFav(row);
+    Fluttertoast.showToast(
+      msg: 'Item $itemName Added To $fav',
+      toastLength: Toast.LENGTH_SHORT,
+    );
+    setState(() {
+      _btnSelectedValFav = null;
+    });
   }
 }

@@ -312,9 +312,10 @@ new Container(
   }
 _delTables() async{
   print('_delTables executed');
-  await db.deleteAllTablePack();
-   await db.deleteAllTableFav();
-   await db.deleteAllTable();
+  // await db.deleteAllTablePack();
+  //  await db.deleteAllTableFav();
+  //  await db.deleteAllTable();
+   await db.deleteAllTableFavRows();
 
 }
 

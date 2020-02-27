@@ -175,6 +175,7 @@ CREATE TABLE IF NOT EXISTS $tablePack (
     Database db = await instance.database;
     return await db.delete(tablePack, where: '$columnIdPack = ?', whereArgs: [id]);
   }
+  //debugging
   Future deleteAllTable() async{
     Database db = await instance.database;
     return await db.rawQuery('DROP TABLE IF EXISTS $table;');
@@ -187,4 +188,17 @@ CREATE TABLE IF NOT EXISTS $tablePack (
     Database db = await instance.database;
     return await db.rawQuery('DROP TABLE IF EXISTS $tablePack;');
   }
+  Future deleteAllTableRows() async{
+    Database db = await instance.database;
+    return await db.rawQuery('delete from $table;');
+  }
+  Future deleteAllTableFavRows() async{
+    Database db = await instance.database;
+    return await db.rawQuery('delete from $tableFav;');
+  }
+  Future deleteAllTablePackRows() async{
+    Database db = await instance.database;
+    return await db.rawQuery('delete from $tablePack;');
+  }
+  //debuging
 }
