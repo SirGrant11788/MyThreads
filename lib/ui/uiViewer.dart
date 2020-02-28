@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mythreads/services/db.dart';
+import 'package:mythreads/ui/uiAppHome.dart';
 
 class ViewerPage extends StatefulWidget {
   @override
@@ -29,6 +30,10 @@ class _ViewerPageState extends State<ViewerPage> {
         builder: (context, snapshot) {
           return Scaffold(
             appBar: AppBar(
+              leading: FlatButton.icon(onPressed: (){Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyApp()),
+              );}, icon: Icon(Icons.arrow_back,size: 20.0,), label: Text('')),
               title: Text('weather TODO'),
             ),
             body: SingleChildScrollView(

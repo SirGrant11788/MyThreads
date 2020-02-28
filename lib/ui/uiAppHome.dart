@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mythreads/services/db.dart';
 import 'package:mythreads/ui/uiAddProduct.dart';
@@ -47,19 +48,19 @@ class _MyHomePageState extends State<MyHomePage> {
   var dbMap;
   var dbMapFav;
   List<String> favList = List(); //diplsay fav 'cat' horizontal
-  List<String> dbList = List<String>(); //testing
+  //List<String> dbList = List<String>(); //testing
   List<Tab> catTabList = List<Tab>();
   List<Widget> contTabList = List<Widget>();
   String weatherToday = "MyThreads";
   String weatherIcon = '';
   WeatherStation weatherStation =
       new WeatherStation("996cc4f3b136aea607960591dd64e7a5");
-  int chipPref = 0; //use to 'search' in tabs
+  // int chipPref = 0; //use to 'search' in tabs
 
   @override
   Widget build(BuildContext context) {
-    _query(); //fetches items from db
-
+    //_query(); //fetches items from db
+//loadWeatherToday();
 //default if nothing is in the db
     final _kTabPages = <Tab>[
       Tab(text: 'Welcome\nadd an item to begin'), //TODO proper intro
@@ -69,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
 
     return FutureBuilder(
-        future: loadWeatherToday(),
+        future: _query(),
         // future: loadWeatherToday(),
         builder: (context, snapshot) {
           return DefaultTabController(
@@ -94,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   style: new TextStyle(fontSize: 17.64),
                                 )),
                             onTap: () {
-                              loadWeatherToday();
+                              print('OnTap Weather');
                             },
                           ),
                         ],
@@ -321,15 +322,27 @@ class _MyHomePageState extends State<MyHomePage> {
     dbMap = allRows;
     dbMapFav = allRowsFav;
     loadList();
-  }
-
-  Future<void> loadWeatherToday() async {
+    //loadWeatherToday();
     Weather weather = (await weatherStation.currentWeather());
+    if('${weather.weatherMain}'!=null && '${weather.tempMin.celsius.round()}' != null && '${weather.tempMax.celsius.round()}'!=null){
     weatherToday =
         '${weather.weatherMain} ${weather.tempMin.celsius.round()}°C/${weather.tempMax.celsius.round()}°C';
+    if('${weather.weatherIcon}'!=null){
     weatherIcon = weather.weatherIcon;
-    //return weatherToday;
+    }
+    }
   }
+
+  // Future<void> loadWeatherToday() async {
+  //   Weather weather = (await weatherStation.currentWeather());
+  //   weatherToday =
+  //       '${weather.weatherMain} ${weather.tempMin.celsius.round()}°C/${weather.tempMax.celsius.round()}°C';
+  //   weatherIcon = weather.weatherIcon;
+  //   //return weatherToday;
+  //   print('weather');
+  //   //loadWeatherToday();
+
+  // }
 
   //loads the items into the correct tabs
   loadList() {
@@ -349,14 +362,16 @@ class _MyHomePageState extends State<MyHomePage> {
                               '${dbMap[index]['pic'].toString().substring(6).replaceAll("'", "")}'))
                           : CircleAvatar(child: Icon(Icons.accessibility)),
                       title: Text('${dbMap[index]['name']}'),
-                      subtitle: Text(
-                          '${dbMap[index]['fit']} ${dbMap[index]['size']} ${dbMap[index]['cat']}'),
+                      subtitle: '${dbMap[index]['fit']}' !=null && '${dbMap[index]['size']}' != null?
+                      Text('${dbMap[index]['fit']} ${dbMap[index]['size']}'):
+                          '${dbMap[index]['fit']}' ==null?
+                          Text('${dbMap[index]['size']}'):
+                          '${dbMap[index]['size']}' ==null?
+                          Text('${dbMap[index]['fit']}'):
+                          Text(''),
                       trailing: Icon(Icons.arrow_right),
                       onTap: () {
-                        Fluttertoast.showToast(
-                          msg: 'Item pressed',
-                          toastLength: Toast.LENGTH_SHORT,
-                        );
+                        _showDialogItemInfo(context, dbMap[index]);
                       },
                     ),
                   )
@@ -365,5 +380,208 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       );
     }
+  }
+
+  _showDialogItemInfo(BuildContext context, var dbMapItem) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              scrollable: true,
+              title: Column(children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      border: Border.all(width: 1.0, color: Colors.blue)),
+                  child: '${dbMapItem['pic'].toString()}' != "" ||
+                          '${dbMapItem['pic'].toString()}' != null
+                      ? Image.file(new File(
+                          '${dbMapItem['pic'].toString().substring(6).replaceAll("'", "")}'))
+                      : CircleAvatar(child: Icon(Icons.accessibility)),
+                ),
+                // Container(
+                //   padding: const EdgeInsets.all(8.0),
+                //   width: MediaQuery.of(context).size.width,
+                //  //decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.blue)),
+                //   child: Text('${dbMapItem['name']}',textAlign: TextAlign.center,style: TextStyle(),),
+                // ),
+                Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Text('NAME', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
+                    ),
+                Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: MediaQuery.of(context).size.width,
+                    child: TextFormField(
+                      //controller
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 1.0),
+                        ),
+                        border: OutlineInputBorder(),
+                        hintText: 'Name',
+                        labelText: '${dbMapItem['name']}',
+                      ),
+                    )),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Text('SIZE', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
+                    ),
+                Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: MediaQuery.of(context).size.width,
+                    child: TextFormField(
+                      //controller
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 1.0),
+                        ),
+                        border: OutlineInputBorder(),
+                        hintText: 'Size',
+                        labelText: '${dbMapItem['size']}',
+                      ),
+                    )),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Text('FIT', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
+                    ),
+                Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: MediaQuery.of(context).size.width,
+                    child: TextFormField(
+                      //controller
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 1.0),
+                        ),
+                        border: OutlineInputBorder(),
+                        hintText: 'Fit',
+                        labelText: '${dbMapItem['fit']}',
+                      ),
+                    )),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Text('CATEGORY', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
+                    ),
+                Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: MediaQuery.of(context).size.width,
+                    child: TextFormField(
+                      //controller
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 1.0),
+                        ),
+                        border: OutlineInputBorder(),
+                        hintText: 'Category',
+                        labelText: '${dbMapItem['cat']}',
+                      ),
+                    )),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Text('WEATHER', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
+                    ),
+                Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: MediaQuery.of(context).size.width,
+                    child: TextFormField(
+                      //controller
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 1.0),
+                        ),
+                        border: OutlineInputBorder(),
+                        hintText: 'Weather',
+                        labelText: '${dbMapItem['weather']}',
+                      ),
+                    )),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Text('RATING', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
+                    ),
+                Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: MediaQuery.of(context).size.width,
+                    child: TextFormField(
+                      //controller
+                      //add limit to ten and only numbers
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 1.0),
+                        ),
+                        border: OutlineInputBorder(),
+                        hintText: 'Rating',
+                        labelText: '${dbMapItem['rating']}',
+                      ),
+                      inputFormatters: [ WhitelistingTextInputFormatter(RegExp("[0-9]")),],maxLength: 1,
+                      keyboardType: TextInputType.number,
+                    )),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Text('NOTE', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
+                    ),
+                Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: MediaQuery.of(context).size.width,
+                    child: TextFormField(
+                      //controller
+                      //expand to three lines
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 1.0),
+                        ),
+                        border: OutlineInputBorder(),
+                        hintText: 'Note',
+                        labelText: '${dbMapItem['desc']}',
+                      ),
+                      maxLines: 3,
+                    )),
+                //option to take another pic
+                Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Text('NEW PHOTO', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
+                    ),
+                Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: MediaQuery.of(context).size.width,
+                    child: FlatButton(
+                    child: new Icon(Icons.photo_camera,color: Colors.blue,),
+                    onPressed: () {
+                      print('Button Pressed Camera');
+                    },
+                    ),
+                ),
+              ],
+              ),
+              actions: <Widget>[
+                  new FlatButton(
+                    child: new Text('SAVE',textAlign: TextAlign.center,),
+                    onPressed: () {
+                      print('Button Pressed');
+                    },
+                  ),
+                  new FlatButton(
+                    child: new Text('DELETE',textAlign: TextAlign.center,),
+                    onPressed: () {
+                      print('Button Pressed');
+                    },
+                  ),
+                  new FlatButton(
+                    child: new Text('CANCEL',textAlign: TextAlign.center,),
+                    onPressed: () {
+                      print('Button Pressed');
+                    },
+                  ),
+                ],
+              );
+        });
   }
 }
