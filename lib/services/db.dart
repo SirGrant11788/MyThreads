@@ -150,6 +150,14 @@ CREATE TABLE IF NOT EXISTS $tablePack (
     int id = row[columnId];
     return await db.update(table, row, where: '$columnId = ?', whereArgs: [id]);
   }
+  Future updateQuery(id,name,cat,size,fit,weather,rating,desc,pic) async {
+    Database db = await instance.database;
+    return await db.rawQuery('UPDATE $table SET $columnName = $name, $columnCat = $cat, $columnSize = $size, $columnFit = $fit, $columnWeather = $weather, $columnRating = $rating, $columnDesc = $desc, $columnPic = $pic WHERE $columnId = $id;');
+  }
+  Future updateQueryFavName(id,name) async {
+    Database db = await instance.database;
+    return await db.rawQuery('UPDATE $tableFav SET $columnFavName = $name WHERE $columnId = $id');
+  }
   Future<int> updateFav(Map<String, dynamic> row) async {
     Database db = await instance.database;
     int id = row[columnIdFav];
@@ -170,6 +178,10 @@ CREATE TABLE IF NOT EXISTS $tablePack (
   Future<int> deleteFav(int id) async {
     Database db = await instance.database;
     return await db.delete(tableFav, where: '$columnIdFav = ?', whereArgs: [id]);
+  }
+  Future<int> deleteFavName(String name) async {
+    Database db = await instance.database;
+    return await db.delete(tableFav, where: '$columnFavName = ?', whereArgs: [name]);
   }
   Future<int> deletePack(int id) async {
     Database db = await instance.database;

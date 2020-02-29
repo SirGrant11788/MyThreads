@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mythreads/services/db.dart';
 import 'package:mythreads/ui/uiAddProduct.dart';
 import 'package:mythreads/ui/uiViewer.dart';
@@ -194,15 +195,36 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 color: Colors.blue[500]
                                                     .withOpacity(0.5),
                                                 child: Center(
-                                                  child: Text(
-                                                    '${dbMap[dbMapFav[i]['_id']]['name']}',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontSize: 16.0,
-                                                      //fontWeight: FontWeight.bold,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
+                                                  // child: Text(
+                                                  //   '${dbMap[dbMapFav[i]['_id']]['name']}',
+                                                  //   textAlign: TextAlign.center,
+                                                  //   style: TextStyle(
+                                                  //     fontSize: 16.0,
+                                                  //     //fontWeight: FontWeight.bold,
+                                                  //     color: Colors.white,
+                                                  //   ),
+                                                  // ),
+                                                  child:RichText(
+                                                                        text: TextSpan(
+                                                                            style: TextStyle(
+                                                                              fontSize: 14.0,
+                                                                              color: Colors.black,
+                                                                            ),
+                                                                            children: <TextSpan>[
+                                                                              new TextSpan(
+                                                                                text: '${dbMap[dbMapFav[i]['_id']]['name']}\n',
+                                                                                style: new TextStyle(
+                                                                                  fontSize: 16.0,
+                                                                                  color: Colors.white,
+                                                                                ),
+                                                                              ),
+                                                                              new TextSpan(text: '${favList[ind]}', style: new TextStyle(fontSize: 10.0, color: Colors.white,)),
+                                                                            ]),
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        softWrap:
+                                                                            true,
+                                                                      ),
                                                 ),
                                               ),
                                             ],
@@ -383,6 +405,23 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _showDialogItemInfo(BuildContext context, var dbMapItem) {
+    TextEditingController _textFieldControllerName = TextEditingController(text: '${dbMapItem['name']}');
+    TextEditingController _textFieldControllerCat = TextEditingController(text: '${dbMapItem['cat']}');
+    TextEditingController _textFieldControllerSize = TextEditingController(text: '${dbMapItem['size']}');
+    TextEditingController _textFieldControllerFit = TextEditingController(text: '${dbMapItem['fit']}');
+    TextEditingController _textFieldControllerWeather = TextEditingController(text: '${dbMapItem['weather']}');
+    TextEditingController _textFieldControllerRating = TextEditingController(text: '${dbMapItem['rating']}');
+    TextEditingController _textFieldControllerDesc = TextEditingController(text: '${dbMapItem['desc']}');
+    File _cameraImage;
+    String _photo = dbMapItem['pic'];
+    Future _pickImageFromCamera() async {
+    File image = await ImagePicker.pickImage(
+        source: ImageSource.camera);
+    setState(() {
+      _cameraImage = image;
+      
+    });
+  }
     return showDialog(
         context: context,
         builder: (context) {
@@ -406,15 +445,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 //  //decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.blue)),
                 //   child: Text('${dbMapItem['name']}',textAlign: TextAlign.center,style: TextStyle(),),
                 // ),
-                Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Text('NAME', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
-                    ),
+                // Container(
+                //       width: MediaQuery.of(context).size.width,
+                //       child: Text('NAME', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
+                //     ),
                 Container(
                     padding: const EdgeInsets.all(8.0),
                     width: MediaQuery.of(context).size.width,
                     child: TextFormField(
-                      //controller
+                      controller:_textFieldControllerName,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide:
@@ -422,18 +461,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         border: OutlineInputBorder(),
                         hintText: 'Name',
-                        labelText: '${dbMapItem['name']}',
+                        labelText: 'Name',
                       ),
                     )),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Text('SIZE', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
-                    ),
+                    // Container(
+                    //   width: MediaQuery.of(context).size.width,
+                    //   child: Text('SIZE', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
+                    // ),
                 Container(
                     padding: const EdgeInsets.all(8.0),
                     width: MediaQuery.of(context).size.width,
                     child: TextFormField(
-                      //controller
+                      controller:_textFieldControllerSize,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide:
@@ -441,18 +480,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         border: OutlineInputBorder(),
                         hintText: 'Size',
-                        labelText: '${dbMapItem['size']}',
+                        labelText: 'Size',
                       ),
                     )),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Text('FIT', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
-                    ),
+                    // Container(
+                    //   width: MediaQuery.of(context).size.width,
+                    //   child: Text('FIT', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
+                    // ),
                 Container(
                     padding: const EdgeInsets.all(8.0),
                     width: MediaQuery.of(context).size.width,
                     child: TextFormField(
-                      //controller
+                      controller:_textFieldControllerSize,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide:
@@ -460,18 +499,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         border: OutlineInputBorder(),
                         hintText: 'Fit',
-                        labelText: '${dbMapItem['fit']}',
+                        labelText: 'Fit',
                       ),
                     )),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Text('CATEGORY', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
-                    ),
+                    // Container(
+                    //   width: MediaQuery.of(context).size.width,
+                    //   child: Text('CATEGORY', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
+                    // ),
                 Container(
                     padding: const EdgeInsets.all(8.0),
                     width: MediaQuery.of(context).size.width,
                     child: TextFormField(
-                      //controller
+                      controller:_textFieldControllerCat,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide:
@@ -479,18 +518,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         border: OutlineInputBorder(),
                         hintText: 'Category',
-                        labelText: '${dbMapItem['cat']}',
+                        labelText: 'Category',
                       ),
                     )),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Text('WEATHER', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
-                    ),
+                    // Container(
+                    //   width: MediaQuery.of(context).size.width,
+                    //   child: Text('WEATHER', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
+                    // ),
                 Container(
                     padding: const EdgeInsets.all(8.0),
                     width: MediaQuery.of(context).size.width,
                     child: TextFormField(
-                      //controller
+                      controller:_textFieldControllerWeather,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide:
@@ -498,18 +537,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         border: OutlineInputBorder(),
                         hintText: 'Weather',
-                        labelText: '${dbMapItem['weather']}',
+                        labelText: 'Weather',
                       ),
                     )),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Text('RATING', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
-                    ),
+                    // Container(
+                    //   width: MediaQuery.of(context).size.width,
+                    //   child: Text('RATING', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
+                    // ),
                 Container(
                     padding: const EdgeInsets.all(8.0),
                     width: MediaQuery.of(context).size.width,
                     child: TextFormField(
-                      //controller
+                      controller:_textFieldControllerRating,
                       //add limit to ten and only numbers
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
@@ -518,20 +557,20 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         border: OutlineInputBorder(),
                         hintText: 'Rating',
-                        labelText: '${dbMapItem['rating']}',
+                        labelText: 'Rating',
                       ),
                       inputFormatters: [ WhitelistingTextInputFormatter(RegExp("[0-9]")),],maxLength: 1,
                       keyboardType: TextInputType.number,
                     )),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Text('NOTE', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
-                    ),
+                    // Container(
+                    //   width: MediaQuery.of(context).size.width,
+                    //   child: Text('NOTE', style: TextStyle(fontSize: 14, color: Colors.blue),textAlign: TextAlign.center,),
+                    // ),
                 Container(
                     padding: const EdgeInsets.all(8.0),
                     width: MediaQuery.of(context).size.width,
                     child: TextFormField(
-                      //controller
+                      controller:_textFieldControllerDesc,
                       //expand to three lines
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
@@ -540,7 +579,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         border: OutlineInputBorder(),
                         hintText: 'Note',
-                        labelText: '${dbMapItem['desc']}',
+                        labelText: 'Note',
                       ),
                       maxLines: 3,
                     )),
@@ -552,12 +591,24 @@ class _MyHomePageState extends State<MyHomePage> {
                 Container(
                     padding: const EdgeInsets.all(8.0),
                     width: MediaQuery.of(context).size.width,
-                    child: FlatButton(
-                    child: new Icon(Icons.photo_camera,color: Colors.blue,),
-                    onPressed: () {
-                      print('Button Pressed Camera');
-                    },
-                    ),
+                    child: new RawMaterialButton(
+                onPressed: () {
+                      _pickImageFromCamera();
+                }, //add pic
+                child:_cameraImage == null ? new Icon(
+                  Icons.camera_enhance,
+                  color: Colors.blue,
+                  size: 35.0,
+                ): new Icon(
+                  Icons.camera_alt,
+                  color: Colors.red,
+                  size: 35.0,
+                ),
+                shape: new CircleBorder(),
+                elevation: 2.0,
+                fillColor: Colors.white,
+                padding: const EdgeInsets.all(15.0),
+              ),
                 ),
               ],
               ),
@@ -565,23 +616,51 @@ class _MyHomePageState extends State<MyHomePage> {
                   new FlatButton(
                     child: new Text('SAVE',textAlign: TextAlign.center,),
                     onPressed: () {
-                      print('Button Pressed');
+                      _cameraImage == null?
+                      _updateItem(dbMapItem['_id'], _textFieldControllerName.text, _textFieldControllerCat.text, _textFieldControllerSize.text, _textFieldControllerFit.text, _textFieldControllerWeather.text, _textFieldControllerRating.text, _textFieldControllerDesc.text, _photo)
+                      :
+                      _updateItem(dbMapItem['_id'], _textFieldControllerName.text, _textFieldControllerCat.text, _textFieldControllerSize.text, _textFieldControllerFit.text, _textFieldControllerWeather.text, _textFieldControllerRating.text, _textFieldControllerDesc.text, _cameraImage.uri);
                     },
                   ),
                   new FlatButton(
                     child: new Text('DELETE',textAlign: TextAlign.center,),
                     onPressed: () {
-                      print('Button Pressed');
+                      _delItem(dbMapItem['_id'],dbMapItem['name']);
                     },
                   ),
                   new FlatButton(
                     child: new Text('CANCEL',textAlign: TextAlign.center,),
                     onPressed: () {
-                      print('Button Pressed');
+                      print('CANCEL ${_textFieldControllerName.text}');
+                      Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyApp()),
+              );
                     },
                   ),
                 ],
               );
         });
+  }
+
+  _delItem(id,name) async {
+    
+    await db.deleteFavName(name);
+     await db.delete(id);
+    print('$name Deleted');
+    Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyApp()),
+              );
+  }
+  _updateItem(id,name,cat,size,fit,weather,rating,desc,pic) async{
+await db.updateQuery(id, name, cat, size, fit, weather, rating, desc, pic);
+await db.updateQueryFavName(id, name);
+
+print('item updated');
+Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyApp()),
+              );
   }
 }
