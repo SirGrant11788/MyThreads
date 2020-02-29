@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mythreads/services/db.dart';
+import 'package:mythreads/services/weatherDialog.dart';
 import 'package:mythreads/ui/uiAppHome.dart';
+import 'package:weather/weather.dart';
 
 class ViewerPage extends StatefulWidget {
   @override
@@ -23,6 +25,11 @@ class _ViewerPageState extends State<ViewerPage> {
   List catList = List();
   List<String> prefListCat = List(); //what not to display
 
+  String weatherToday = "MyThreads";
+  String weatherIcon = '';
+  WeatherStation weatherStation =
+      new WeatherStation("996cc4f3b136aea607960591dd64e7a5");
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -34,7 +41,32 @@ class _ViewerPageState extends State<ViewerPage> {
                 context,
                 MaterialPageRoute(builder: (context) => MyApp()),
               );}, icon: Icon(Icons.arrow_back,size: 20.0,), label: Text('')),
-              title: Text('weather TODO'),
+              title: //Text('weather TODO'),
+
+Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: weatherIcon == ''
+                      ? [Text("")]
+                      : [
+                          Image.network(
+                            'http://openweathermap.org/img/wn/$weatherIcon@2x.png',
+                            fit: BoxFit.contain,
+                            height: 32,
+                          ),
+                          InkWell(
+                            child: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  weatherToday,
+                                  style: new TextStyle(fontSize: 17.64),
+                                )),
+                            onTap: () {
+                              showDialogWeather(context);
+                            },
+                          ),
+                        ],
+                ),
+
             ),
             body: SingleChildScrollView(
               child: Column(
@@ -320,6 +352,16 @@ class _ViewerPageState extends State<ViewerPage> {
             'Add New Fav',
             style: TextStyle(fontSize: 10, color: Colors.black),
           )));
+    }
+
+    //loadWeatherToday();
+    Weather weather = (await weatherStation.currentWeather());
+    if('${weather.weatherMain}'!=null && '${weather.tempMin.celsius.round()}' != null && '${weather.tempMax.celsius.round()}'!=null){
+    weatherToday =
+        '${weather.weatherMain} ${weather.tempMin.celsius.round()}°C/${weather.tempMax.celsius.round()}°C';
+    if('${weather.weatherIcon}'!=null){
+    weatherIcon = weather.weatherIcon;
+    }
     }
   }
 

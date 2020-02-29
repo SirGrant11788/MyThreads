@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mythreads/services/db.dart';
+import 'package:mythreads/services/weather.dart';
+import 'package:mythreads/services/weatherDialog.dart';
 import 'package:mythreads/ui/uiAddProduct.dart';
 import 'package:mythreads/ui/uiViewer.dart';
 import 'package:weather/weather.dart';
@@ -56,10 +58,12 @@ class _MyHomePageState extends State<MyHomePage> {
   String weatherIcon = '';
   WeatherStation weatherStation =
       new WeatherStation("996cc4f3b136aea607960591dd64e7a5");
+      
   // int chipPref = 0; //use to 'search' in tabs
 
   @override
   Widget build(BuildContext context) {
+
     //_query(); //fetches items from db
 //loadWeatherToday();
 //default if nothing is in the db
@@ -80,7 +84,8 @@ class _MyHomePageState extends State<MyHomePage> {
               appBar: AppBar(
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: weatherIcon == ''
+                  children: 
+                weatherIcon == ''
                       ? [Text("")]
                       : [
                           Image.network(
@@ -96,11 +101,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                   style: new TextStyle(fontSize: 17.64),
                                 )),
                             onTap: () {
-                              print('OnTap Weather');
+                              showDialogWeather(context);
                             },
-                          ),
+                          ),           
                         ],
                 ),
+                
                 leading: PopupMenuButton<String>(
                   onSelected: (value) => value == 'Settings'
                       ? _delTables()
@@ -340,7 +346,12 @@ class _MyHomePageState extends State<MyHomePage> {
         favList.add('${element['fav']}');
       }
     });
-
+//testing
+print('allrows\n');
+allRows.forEach((element) {print(element);});
+print('\nallrowsfav\n');
+allRowsFav.forEach((element) {print(element);});
+//testing
     dbMap = allRows;
     dbMapFav = allRowsFav;
     loadList();
@@ -353,6 +364,8 @@ class _MyHomePageState extends State<MyHomePage> {
     weatherIcon = weather.weatherIcon;
     }
     }
+
+    
   }
 
   // Future<void> loadWeatherToday() async {
@@ -384,11 +397,14 @@ class _MyHomePageState extends State<MyHomePage> {
                               '${dbMap[index]['pic'].toString().substring(6).replaceAll("'", "")}'))
                           : CircleAvatar(child: Icon(Icons.accessibility)),
                       title: Text('${dbMap[index]['name']}'),
-                      subtitle: '${dbMap[index]['fit']}' !=null && '${dbMap[index]['size']}' != null?
+                      subtitle://TODO sort out mess of ifs
+                       '${dbMap[index]['fit']}' !='null' && '${dbMap[index]['size']}' != 'null'?
                       Text('${dbMap[index]['fit']} ${dbMap[index]['size']}'):
-                          '${dbMap[index]['fit']}' ==null?
+                      '${dbMap[index]['fit']}' =='null' && '${dbMap[index]['size']}' == 'null'?
+                          Text(''):
+                          '${dbMap[index]['fit']}' =='null'?
                           Text('${dbMap[index]['size']}'):
-                          '${dbMap[index]['size']}' ==null?
+                          '${dbMap[index]['size']}' =='null'?
                           Text('${dbMap[index]['fit']}'):
                           Text(''),
                       trailing: Icon(Icons.arrow_right),
@@ -626,6 +642,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: new Text('DELETE',textAlign: TextAlign.center,),
                     onPressed: () {
                       _delItem(dbMapItem['_id'],dbMapItem['name']);
+                //       Navigator.push(
+                // context,
+                // MaterialPageRoute(builder: (context) => MyApp()));
                     },
                   ),
                   new FlatButton(
@@ -642,11 +661,15 @@ class _MyHomePageState extends State<MyHomePage> {
               );
         });
   }
-
+//TODO FIX DELETE MISSHAP!
   _delItem(id,name) async {
-    
+    print('del1');
     await db.deleteFavName(name);
+    print('del2');
+    await db.deleteFav(id);
+    print('del3');
      await db.delete(id);
+     print('del4');
     print('$name Deleted');
     Navigator.push(
                 context,

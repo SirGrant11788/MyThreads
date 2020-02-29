@@ -152,11 +152,11 @@ CREATE TABLE IF NOT EXISTS $tablePack (
   }
   Future updateQuery(id,name,cat,size,fit,weather,rating,desc,pic) async {
     Database db = await instance.database;
-    return await db.rawQuery('UPDATE $table SET $columnName = $name, $columnCat = $cat, $columnSize = $size, $columnFit = $fit, $columnWeather = $weather, $columnRating = $rating, $columnDesc = $desc, $columnPic = $pic WHERE $columnId = $id;');
+    return await db.rawQuery('''UPDATE $table SET $columnName = '$name', $columnCat = '$cat', $columnSize = '$size', $columnFit = '$fit', $columnWeather = '$weather', $columnRating = '$rating', $columnDesc = '$desc', $columnPic = '$pic' WHERE $columnId = $id''');
   }
   Future updateQueryFavName(id,name) async {
     Database db = await instance.database;
-    return await db.rawQuery('UPDATE $tableFav SET $columnFavName = $name WHERE $columnId = $id');
+    return await db.rawQuery('''UPDATE $tableFav SET $columnFavName = '$name' WHERE $columnId = $id''');
   }
   Future<int> updateFav(Map<String, dynamic> row) async {
     Database db = await instance.database;
