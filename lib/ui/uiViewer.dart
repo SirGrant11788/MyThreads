@@ -17,7 +17,7 @@ class _ViewerPageState extends State<ViewerPage> {
   final db = DatabaseHelper.instance;
   TextEditingController _textFieldControllerDialog = TextEditingController();
   List<DropdownMenuItem<String>> favList = List();
-  String _btnSelectedValFav = null;
+  String _btnSelectedValFav;
   var dbMap;
   var dbMapFav;
   List<Widget> catListWidget = List<Widget>();

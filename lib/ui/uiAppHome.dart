@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mythreads/services/db.dart';
-import 'package:mythreads/services/weather.dart';
 import 'package:mythreads/services/weatherDialog.dart';
 import 'package:mythreads/ui/uiAddProduct.dart';
 import 'package:mythreads/ui/uiViewer.dart';
@@ -332,6 +331,10 @@ class _MyHomePageState extends State<MyHomePage> {
   _query() async {
     final allRows = await db.queryAllRows();
     final allRowsFav = await db.queryAllRowsFav();
+// testing column name
+final allColumns = await db.queryColumns();
+    allColumns.forEach((column){print('${column['name']}');});
+//testing
 
     catTabList.clear();
     allRows.forEach((row) {
@@ -346,12 +349,7 @@ class _MyHomePageState extends State<MyHomePage> {
         favList.add('${element['fav']}');
       }
     });
-//testing
-print('allrows\n');
-allRows.forEach((element) {print(element);});
-print('\nallrowsfav\n');
-allRowsFav.forEach((element) {print(element);});
-//testing
+    
     dbMap = allRows;
     dbMapFav = allRowsFav;
     loadList();
@@ -663,14 +661,8 @@ allRowsFav.forEach((element) {print(element);});
   }
 //TODO FIX DELETE MISSHAP!
   _delItem(id,name) async {
-    print('del1');
-    await db.deleteFavName(name);
-    print('del2');
-    await db.deleteFav(id);
-    print('del3');
-     await db.delete(id);
-     print('del4');
-    print('$name Deleted');
+    await db.deleteFavName('$name');
+      await db.delete(id);
     Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => MyApp()),

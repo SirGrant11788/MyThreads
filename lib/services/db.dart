@@ -121,6 +121,10 @@ CREATE TABLE IF NOT EXISTS $tablePack (
     Database db = await instance.database;
     return await db.query(tablePack);
   }
+  Future<List<Map<String, dynamic>>> queryColumns() async {//testing
+    Database db = await instance.database;
+    return await db.rawQuery("PRAGMA table_info(" + table + ")", null);
+  }
 
   // //ALL catagories
   // Future<List<Map<String, dynamic>>> queryAllCats() async {
