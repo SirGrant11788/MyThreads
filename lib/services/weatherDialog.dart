@@ -39,7 +39,7 @@ showDialogWeather(BuildContext context) {
                             fit: BoxFit.contain,
                             height: 32,
                           ),
-                          title: Text('${DateFormat('EEEE').format(weather[index].date)} ${weather[index].date.hour}:00\n${weather[index].weatherDescription}\nMIN ${weather[index].tempMin}\nMAX ${weather[index].tempMax}\nWIND ${weather[index].windSpeed}m/s'),
+                          title: Text('${DateFormat('EEEE').format(weather[index].date)} ${weather[index].date.hour}:00\n${weather[index].weatherDescription}\n${weather[index].tempMax}\nWIND ${weather[index].windSpeed}m/s'),
                         );
                        },
                       ),
