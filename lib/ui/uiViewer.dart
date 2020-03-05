@@ -37,36 +37,43 @@ class _ViewerPageState extends State<ViewerPage> {
         builder: (context, snapshot) {
           return Scaffold(
             appBar: AppBar(
-              leading: FlatButton.icon(onPressed: (){Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MyApp()),
-              );}, icon: Icon(Icons.arrow_back,size: 20.0,), label: Text('')),
+              leading: FlatButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyApp()),
+                    );
+                  },
+                  icon: Icon(
+                    Icons.arrow_back,
+                    size: 20.0,
+                  ),
+                  label: Text('')),
               title: //Text('weather TODO'),
 
-Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: weatherIcon == ''
-                      ? [Text("")]
-                      : [
-                          Image.network(
-                            'http://openweathermap.org/img/wn/$weatherIcon@2x.png',
-                            fit: BoxFit.contain,
-                            height: 32,
-                          ),
-                          InkWell(
-                            child: Container(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  weatherToday,
-                                  style: new TextStyle(fontSize: 17.64),
-                                )),
-                            onTap: () {
-                              showDialogWeather(context);
-                            },
-                          ),
-                        ],
-                ),
-
+                  Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: weatherIcon == ''
+                    ? [Text("")]
+                    : [
+                        Image.network(
+                          'http://openweathermap.org/img/wn/$weatherIcon@2x.png',
+                          fit: BoxFit.contain,
+                          height: 32,
+                        ),
+                        InkWell(
+                          child: Container(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                weatherToday,
+                                style: new TextStyle(fontSize: 17.64),
+                              )),
+                          onTap: () {
+                            showDialogWeather(context);
+                          },
+                        ),
+                      ],
+              ),
             ),
             body: SingleChildScrollView(
               child: Column(
@@ -81,7 +88,7 @@ Row(
                     children: [
                       new Center(
                         child: new Container(
-                          width: MediaQuery.of(context).size.height * 0.5294,
+                          width: MediaQuery.of(context).size.height * 0.5172,//0.5294
                           color: Colors.blueGrey[50],
                           height: MediaQuery.of(context).size.height * 0.8425,
                           child: ListView.builder(
@@ -133,8 +140,8 @@ Row(
                                                                     Container(
                                                                       //info of item
                                                                       width:
-                                                                          (MediaQuery.of(context).size.width / 1.019) /
-                                                                              3,
+                                                                          (MediaQuery.of(context).size.width / 1.05) /
+                                                                              3,//1.019
                                                                       child:
                                                                           RichText(
                                                                         text: TextSpan(
@@ -356,12 +363,14 @@ Row(
 
     //loadWeatherToday();
     Weather weather = (await weatherStation.currentWeather());
-    if('${weather.weatherMain}'!=null && '${weather.tempMin.celsius.round()}' != null && '${weather.tempMax.celsius.round()}'!=null){
-    weatherToday =
-        '${weather.weatherMain} ${weather.tempMin.celsius.round()}°C/${weather.tempMax.celsius.round()}°C';
-    if('${weather.weatherIcon}'!=null){
-    weatherIcon = weather.weatherIcon;
-    }
+    if ('${weather.weatherMain}' != null &&
+        '${weather.tempMin.celsius.round()}' != null &&
+        '${weather.tempMax.celsius.round()}' != null) {
+      weatherToday =
+          '${weather.weatherMain} ${weather.tempMin.celsius.round()}°C/${weather.tempMax.celsius.round()}°C';
+      if ('${weather.weatherIcon}' != null) {
+        weatherIcon = weather.weatherIcon;
+      }
     }
   }
 

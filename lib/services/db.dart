@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS $tablePack (
     Database db = await instance.database;
     return await db.query(tablePack);
   }
-  Future<List<Map<String, dynamic>>> queryColumns() async {//testing
+  Future<List<Map<String, dynamic>>> queryColumns() async {//get all column names
     Database db = await instance.database;
     return await db.rawQuery("PRAGMA table_info(" + table + ")", null);
   }
@@ -171,6 +171,15 @@ CREATE TABLE IF NOT EXISTS $tablePack (
     Database db = await instance.database;
     int id = row[columnIdPack];
     return await db.update(tablePack, row, where: '$columnIdPack = ?', whereArgs: [id]);
+  }
+  //edit item page
+  Future updateItemQuery(id,col,name) async {
+    Database db = await instance.database;
+    return await db.rawQuery('''UPDATE $table SET $col = '$name' WHERE $columnId = $id''');
+  }
+  Future updateItemQueryFav(id,col,name) async {
+    Database db = await instance.database;
+    return await db.rawQuery('''UPDATE $tableFav SET $columnFavName = '$name' WHERE $columnId = $id''');
   }
 
   // Deletes the row specified by the id. The number of affected rows is 
