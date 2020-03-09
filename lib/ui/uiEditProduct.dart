@@ -45,7 +45,7 @@ class _EditProductPageState extends State<EditProductPage> {
                     icon: Icon(Icons.delete),
                     onPressed: () {
                       Fluttertoast.showToast(
-                        msg: 'Delete Button Pressed',
+                        msg: '${widget.editDb['name']} Deleted',
                         toastLength: Toast.LENGTH_LONG,
                       );
                         deleteItem('${widget.editDb['_id']}','${widget.editDb['name']}');

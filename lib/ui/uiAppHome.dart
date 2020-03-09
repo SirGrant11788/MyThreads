@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'MyThreads',
+      title: 'MyThreads',//TODO chnage name to CatIt ?
       theme: ThemeData(
         // This is the theme of your application.
 
@@ -324,9 +324,10 @@ class _MyHomePageState extends State<MyHomePage> {
       // print('${column['name']}');
       columnList.add('${column['name']}');
     });
+    if(columnList.length >=4){
     leading1 = columnList[4];
-    leading2 = columnList[5];
-
+    //leading2 = columnList[5];
+    }
     catTabList.clear();
     allRows.forEach((row) {
       if (!catTabList.toString().contains('${row['cat']}')) {
@@ -397,14 +398,14 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  _delItem(id, name) async {
-    await db.deleteFavName('$name');
-    await db.delete(id);
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => MyApp()),
-    );
-  }
+  // _delItem(id, name) async {
+  //   await db.deleteFavName('$name');
+  //   await db.delete(id);
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => MyApp()),
+  //   );
+  // }
 
   // _updateItem(id, name, cat, size, fit, weather, rating, desc, pic) async {
   //   await db.updateQuery(id, name, cat, size, fit, weather, rating, desc, pic);

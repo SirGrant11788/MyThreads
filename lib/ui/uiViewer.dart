@@ -49,7 +49,7 @@ class _ViewerPageState extends State<ViewerPage> {
                     size: 20.0,
                   ),
                   label: Text('')),
-              title: //Text('weather TODO'),
+              title: 
 
                   Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -405,7 +405,8 @@ class _ViewerPageState extends State<ViewerPage> {
       DatabaseHelper.columnFavName: '$itemName',
       DatabaseHelper.columnFav: '$fav',
     };
-    final id = await db.insertFav(row);
+    //final id = 
+    await db.insertFav(row);
     Fluttertoast.showToast(
       msg: 'Item $itemName Added To $fav',
       toastLength: Toast.LENGTH_SHORT,
