@@ -17,10 +17,10 @@ class DatabaseHelper {
   static final columnId = '_id';
   static final columnName = 'name';
   static final columnCat = 'cat';
-  static final columnSize = 'size';
-  static final columnFit = 'fit';
-  static final columnWeather = 'weather';
-  static final columnRating = 'rating';
+  // static final columnSize = 'size';
+  // static final columnFit = 'fit';
+  // static final columnWeather = 'weather';
+  // static final columnRating = 'rating';
   static final columnDesc = 'desc';
   static final columnPic = 'pic';
 
@@ -62,13 +62,14 @@ class DatabaseHelper {
             $columnId INTEGER PRIMARY KEY,
             $columnName TEXT NOT NULL,
             $columnCat TEXT NOT NULL,
-            $columnSize TEXT,
-            $columnFit TEXT,
-            $columnWeather TEXT,
-            $columnRating TEXT,
+            
             $columnDesc TEXT,
             $columnPic TEXT
           );''');
+          // $columnSize TEXT,
+          //   $columnFit TEXT,
+          //   $columnWeather TEXT,
+          //   $columnRating TEXT,
 
           await db.execute('''
 CREATE TABLE IF NOT EXISTS $tableFav (
@@ -105,6 +106,15 @@ CREATE TABLE IF NOT EXISTS $tablePack (
   Future<int> insertPack(Map<String, dynamic> row) async {
     Database db = await instance.database;
     return await db.insert(tablePack, row);
+  }
+  Future insertColumn(name) async {
+    Database db = await instance.database;
+    return await db.rawQuery('''ALTER TABLE $table ADD $name TEXT''');
+  }
+  Future insertQuery(col,name,item) async {
+    Database db = await instance.database;
+    //return await db.rawQuery('''INSERT INTO $table ($col) VALUES ('$name')''');
+    return await db.rawQuery('''UPDATE $table SET $col = '$name' WHERE $columnName = '$item' ''');//need to change from name to id
   }
 
   // All of the rows are returned as a list of maps, where each map is 
@@ -154,10 +164,10 @@ CREATE TABLE IF NOT EXISTS $tablePack (
     int id = row[columnId];
     return await db.update(table, row, where: '$columnId = ?', whereArgs: [id]);
   }
-  Future updateQuery(id,name,cat,size,fit,weather,rating,desc,pic) async {
-    Database db = await instance.database;
-    return await db.rawQuery('''UPDATE $table SET $columnName = '$name', $columnCat = '$cat', $columnSize = '$size', $columnFit = '$fit', $columnWeather = '$weather', $columnRating = '$rating', $columnDesc = '$desc', $columnPic = '$pic' WHERE $columnId = $id''');
-  }
+  // Future updateQuery(id,name,cat,size,fit,weather,rating,desc,pic) async {
+  //   Database db = await instance.database;
+  //   return await db.rawQuery('''UPDATE $table SET $columnName = '$name', $columnCat = '$cat', $columnSize = '$size', $columnFit = '$fit', $columnWeather = '$weather', $columnRating = '$rating', $columnDesc = '$desc', $columnPic = '$pic' WHERE $columnId = $id''');
+  // }
   Future updateQueryFavName(id,name) async {
     Database db = await instance.database;
     return await db.rawQuery('''UPDATE $tableFav SET $columnFavName = '$name' WHERE $columnId = $id''');

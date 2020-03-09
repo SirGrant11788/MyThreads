@@ -2,12 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:mythreads/services/db.dart';
 import 'package:mythreads/services/weatherDialog.dart';
-import 'package:mythreads/ui/uiAddProduct.dart';
+import 'package:mythreads/ui/uiAddItem.dart';
 import 'package:mythreads/ui/uiEditProduct.dart';
 import 'package:mythreads/ui/uiViewer.dart';
 import 'package:weather/weather.dart';
@@ -50,9 +48,9 @@ class _MyHomePageState extends State<MyHomePage> {
   final db = DatabaseHelper.instance;
   var dbMap;
   var dbMapFav;
-  String leading1,leading2;
+  String leading1, leading2;
   List<String> favList = List(); //diplsay fav 'cat' horizontal
-  List<String> columnList = List();//list of columns in the database
+  List<String> columnList = List(); //list of columns in the database
   List<Tab> catTabList = List<Tab>();
   List<Widget> contTabList = List<Widget>();
   String weatherToday = "MyThreads";
@@ -106,14 +104,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
                   itemBuilder: (BuildContext context) =>
                       <PopupMenuEntry<String>>[
-                    const PopupMenuItem<String>(
-                      child: Text('Shop'),
-                      value: 'Shop',
-                    ),
-                    const PopupMenuItem<String>(
-                      child: Text('Backup'),
-                      value: 'Backup',
-                    ),
+                    // const PopupMenuItem<String>(
+                    //   child: Text('Shop'),
+                    //   value: 'Shop',
+                    // ),
+                    // const PopupMenuItem<String>(
+                    //   child: Text('Backup'),
+                    //   value: 'Backup',
+                    // ),
                     const PopupMenuItem<String>(
                       child: Text('Settings'),
                       value: 'Settings',
@@ -133,15 +131,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       );
                     },
                   ),
-                  IconButton(
-                    icon: Icon(Icons.account_circle),
-                    onPressed: () {
-                      Fluttertoast.showToast(
-                        msg: 'account pressed',
-                        toastLength: Toast.LENGTH_LONG,
-                      );
-                    },
-                  ),
+                  //TODO Website login
+                  // IconButton(
+                  //   icon: Icon(Icons.account_circle),
+                  //   onPressed: () {
+                  //     Fluttertoast.showToast(
+                  //       msg: 'account pressed',
+                  //       toastLength: Toast.LENGTH_LONG,
+                  //     );
+                  //   },
+                  // ),
                 ],
               ),
               body: new ListView(
@@ -282,29 +281,21 @@ class _MyHomePageState extends State<MyHomePage> {
                     IconButton(
                         icon: Icon(Icons.add),
                         onPressed: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(builder: (context) => ToDo()),
-                          // );
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => AddProductPage()),
+                                builder: (context) =>
+                                    AddItemPage()), //AddProductPage()
                           );
                         }),
                     IconButton(
                       icon: Icon(Icons.shopping_basket),
                       onPressed: () {
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //     builder: (BuildContext context) => MyWebView(
-                        //           title: "Store Website",
-                        //           selectedUrl: "https://www.google.com",
-                        //         )));
+                        //TODO website
                         Fluttertoast.showToast(
-                          msg: 'button pressed. TESTING',
+                          msg: 'button pressed. WEBSITE',
                           toastLength: Toast.LENGTH_LONG,
                         );
-                        
                       },
                     ),
                   ],
@@ -320,23 +311,21 @@ class _MyHomePageState extends State<MyHomePage> {
     // await db.deleteAllTablePack();
     //  await db.deleteAllTableFav();
     //  await db.deleteAllTable();
-     await db.deleteAllTableFavRows();
+    // await db.deleteAllTableFavRows();
   }
 
   _query() async {
     final allRows = await db.queryAllRows();
     final allRowsFav = await db.queryAllRowsFav();
-// testing column name columnList
-columnList.clear();
+
+    columnList.clear();
     final allColumns = await db.queryColumns();
     allColumns.forEach((column) {
-     // print('${column['name']}');
+      // print('${column['name']}');
       columnList.add('${column['name']}');
     });
-    leading1=columnList[4];
-    leading2=columnList[5];
-    
-//testing
+    leading1 = columnList[4];
+    leading2 = columnList[5];
 
     catTabList.clear();
     allRows.forEach((row) {
@@ -354,8 +343,7 @@ columnList.clear();
 
     dbMap = allRows;
     dbMapFav = allRowsFav;
-    //debugPrint('MAP:$dbMap !');
-    //debugPrint('FAV:$dbMapFav !');
+
     loadList();
 
     Weather weather = (await weatherStation.currentWeather());
@@ -388,21 +376,17 @@ columnList.clear();
                               '${dbMap[index]['pic'].toString().substring(6).replaceAll("'", "")}'))
                           : CircleAvatar(child: Icon(Icons.accessibility)),
                       title: Text('${dbMap[index]['name']}'),
-                      subtitle: columnList[4] != null && columnList[5] !=null?
-                      Text('${dbMap[index]['$leading1']} ${dbMap[index]['$leading2']}')
-                                          :Text('${dbMap[index]['$leading1']}'),
-                      trailing: Icon(Icons.arrow_right),
+                      subtitle: columnList[4] != null
+                          ? Text('${dbMap[index]['$leading1']}')
+                          : Text(''),
+                      // trailing: Icon(Icons.arrow_right),
                       onTap: () {
-                        //_showDialogItemInfo(context, dbMap[index]);
-                        //testing
-                      
-                        
-                            Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => EditProductPage(dbMap[index],columnList)),
-                          );
-                        //testing
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  EditProductPage(dbMap[index], columnList)),
+                        );
                       },
                     ),
                   )
@@ -413,9 +397,6 @@ columnList.clear();
     }
   }
 
-  
-
-
   _delItem(id, name) async {
     await db.deleteFavName('$name');
     await db.delete(id);
@@ -425,14 +406,14 @@ columnList.clear();
     );
   }
 
-  _updateItem(id, name, cat, size, fit, weather, rating, desc, pic) async {
-    await db.updateQuery(id, name, cat, size, fit, weather, rating, desc, pic);
-    await db.updateQueryFavName(id, name);
+  // _updateItem(id, name, cat, size, fit, weather, rating, desc, pic) async {
+  //   await db.updateQuery(id, name, cat, size, fit, weather, rating, desc, pic);
+  //   await db.updateQueryFavName(id, name);
 
-    print('item updated');
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => MyApp()),
-    );
-  }
+  //   print('item updated');
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => MyApp()),
+  //   );
+  // }
 }

@@ -88,7 +88,8 @@ class _ViewerPageState extends State<ViewerPage> {
                     children: [
                       new Center(
                         child: new Container(
-                          width: MediaQuery.of(context).size.height * 0.5172,//0.5294
+                          width: MediaQuery.of(context).size.height *
+                              0.5172, //0.5294
                           color: Colors.blueGrey[50],
                           height: MediaQuery.of(context).size.height * 0.8425,
                           child: ListView.builder(
@@ -139,9 +140,9 @@ class _ViewerPageState extends State<ViewerPage> {
                                                                       Widget>[
                                                                     Container(
                                                                       //info of item
-                                                                      width:
-                                                                          (MediaQuery.of(context).size.width / 1.05) /
-                                                                              3,//1.019
+                                                                      width: (MediaQuery.of(context).size.width /
+                                                                              1.05) /
+                                                                          3, //1.019
                                                                       child:
                                                                           RichText(
                                                                         text: TextSpan(

@@ -43,7 +43,7 @@ class _EditProductPageState extends State<EditProductPage> {
         actions: <Widget>[
                   IconButton(
                     icon: Icon(Icons.delete),
-                    onPressed: () {//TODO delete item
+                    onPressed: () {
                       Fluttertoast.showToast(
                         msg: 'Delete Button Pressed',
                         toastLength: Toast.LENGTH_LONG,
@@ -58,7 +58,7 @@ class _EditProductPageState extends State<EditProductPage> {
         child: Column(children: <Widget>[
           InkWell(
                           child:
-          Container(//TODO wrap in inkwell for new pic
+          Container(
             padding: const EdgeInsets.all(8.0),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height/3,
