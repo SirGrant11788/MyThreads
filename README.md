@@ -1,7 +1,7 @@
 ## Table of contents
 * [General info](#general-info)
 * [Demo](#demo)
-* [Planned features](#planned features)
+* [Planned features](#planned-features)
 * [Bugs](#bugs)
 
 ## General info
